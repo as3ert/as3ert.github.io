@@ -28,6 +28,7 @@ end
 
 # Gem Themes for Jekyll
 gem "monophase"
+gem "jekyll-remote-theme"
 # gem "chulapa-jekyll"
 
 # Performance-booster for watching directories on Windows
