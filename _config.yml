@@ -31,9 +31,9 @@ github_username:  as3ert
 
 # Build settings
 # theme: monophase
-# remote_theme: BDHU/minimalist
-repository: as3ert/as3ert.github.io
-remote_theme: pages-themes/minimal@v0.2.0
+repository: as3ert/minimalist
+# remote_theme: pages-themes/minimal@v0.2.0
+remote_theme: as3ert/minimalist
 plugins:
   - jekyll-remote-theme
   - jekyll-feed
