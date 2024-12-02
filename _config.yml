@@ -31,9 +31,9 @@ github_username:  as3ert
 
 # Build settings
 # theme: monophase
-theme: minimalist
-# remote_theme: BDHU/minimalist
+remote_theme: BDHU/minimalist
 plugins:
+  - jekyll-remote-theme
   - jekyll-feed
 
 # Exclude from processing.
