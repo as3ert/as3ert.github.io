@@ -31,7 +31,6 @@ github_username:  as3ert
 
 # Build settings
 # theme: monophase
-# repository: BDHU/minimalist
 remote_theme: minimalist
 plugins:
   - jekyll-remote-theme
