@@ -31,6 +31,7 @@ github_username:  as3ert
 
 # Build settings
 # theme: monophase
+github: [metadata]
 repository: as3ert/minimalist
 # remote_theme: pages-themes/minimal@v0.2.0
 remote_theme: as3ert/minimalist
