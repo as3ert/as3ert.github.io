@@ -27,7 +27,7 @@ platforms :mingw, :x64_mingw, :mswin, :jruby do
 end
 
 # Gem Themes for Jekyll
-gem "monophase"
+# gem "monophase"
 # gem "chulapa-jekyll"
 
 # Performance-booster for watching directories on Windows

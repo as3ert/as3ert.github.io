@@ -18,23 +18,26 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Your awesome title
+title: Page Title
 email: guangxin@guangxinzhao.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Page description
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://www.guangxinzhao.com" # the base hostname & protocol for your site, e.g. http://example.com
-# twitter_username: jekyllrb
 github_username:  as3ert
+github_relative:
+  is_user_page: true
+  # repository_name: as3ert.github.io
+  username: as3ert
+show_downloads: [true]
 
 # Build settings
 # theme: monophase
-github: [metadata]
-repository: as3ert/minimalist
-# remote_theme: pages-themes/minimal@v0.2.0
-remote_theme: as3ert/minimalist
+github: 
+  [metadata]
+repository: pages-themes/minimal@v0.2.0
+remote_theme: pages-themes/minimal@v0.2.0
+# remote_theme: as3ert/minimalist
 plugins:
   - jekyll-remote-theme
   - jekyll-feed
