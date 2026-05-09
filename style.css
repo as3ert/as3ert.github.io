@@ -69,21 +69,7 @@ body::before {
   mix-blend-mode: lighten;
 }
 
-/* phosphor flicker */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: rgba(255, 170, 0, 0.0);
-  z-index: 99;
-  animation: flicker 9s infinite steps(1);
-}
-@keyframes flicker {
-  0%, 5%, 92%, 95%, 100% { background: rgba(255,170,0,0.0); }
-  93% { background: rgba(255,170,0,0.014); }
-  94% { background: rgba(0,0,0,0.06); }
-}
+/* phosphor flicker — removed, was too distracting */
 
 ::selection { background: var(--amber); color: var(--bg); }
 
