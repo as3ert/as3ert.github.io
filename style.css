@@ -34,7 +34,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  scroll-snap-type: y proximity;  /* gently snap to section boundaries */
+  scroll-snap-type: y mandatory;  /* hard-snap: scroll always lands on a section */
 }
 
 body {
