@@ -11,11 +11,12 @@
   }
 
   // ---- snap-on-wheel: one scroll input = jump to next section -
-  // (replaces CSS scroll-snap, which lags on most browsers when set
-  // to mandatory because momentum scroll fights the snap)
+  // (custom animator — never lets the browser do native scroll, so
+  // there's no "scroll-a-few-pixels-then-jump" stutter)
   const snapSections = Array.from(document.querySelectorAll("main > section"));
   let snapBusy = false;
-  let snapTimer = 0;
+  let wheelAcc = 0;
+  let wheelResetTimer = 0;
 
   const nearestSectionIdx = () => {
     const probe = window.scrollY + window.innerHeight * 0.35;
@@ -24,22 +25,43 @@
     return best;
   };
 
+  // custom RAF-based animation — full control, no fighting with CSS smooth
+  const animateScrollTo = (targetY, duration = 320) => {
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 1) return;
+    const startTime = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // cubic ease-out
+    const tick = (now) => {
+      const t = Math.min(1, (now - startTime) / duration);
+      window.scrollTo(0, startY + distance * ease(t));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
   const snapTo = (i) => {
     i = Math.max(0, Math.min(snapSections.length - 1, i));
     const el = snapSections[i];
-    if (!el || snapBusy) return;
+    if (!el) return;
     snapBusy = true;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-    clearTimeout(snapTimer);
-    snapTimer = setTimeout(() => { snapBusy = false; }, 650);
+    animateScrollTo(el.offsetTop, 320);
+    setTimeout(() => { snapBusy = false; }, 360);
   };
 
-  // wheel — desktop & trackpad
+  // wheel — ALWAYS preventDefault so the browser never does its own scroll;
+  // accumulate so trackpad jitter doesn't fire 5 jumps from one swipe
   window.addEventListener("wheel", (e) => {
-    if (Math.abs(e.deltaY) < 6) return;             // ignore jitter
-    if (snapBusy) { e.preventDefault(); return; }
     e.preventDefault();
-    snapTo(nearestSectionIdx() + (e.deltaY > 0 ? 1 : -1));
+    if (snapBusy) return;
+    wheelAcc += e.deltaY;
+    clearTimeout(wheelResetTimer);
+    wheelResetTimer = setTimeout(() => { wheelAcc = 0; }, 180);
+    if (Math.abs(wheelAcc) >= 30) {
+      const dir = wheelAcc > 0 ? 1 : -1;
+      wheelAcc = 0;
+      snapTo(nearestSectionIdx() + dir);
+    }
   }, { passive: false });
 
   // touch — swipe up/down
