@@ -1,24 +1,42 @@
 # ~/projects/
 
-drwxr-xr-x  as3ert-pcb/         Custom 60% mechanical keyboard.
-                                KiCad schematic + layout, firmware in Rust.
-                                tags: kicad, embedded-rust, hardware
+drwxr-xr-x  moebius-npr-renderer/     Mœbius-Style Non-Photorealistic Renderer
+                                      Practical Course Visual Computing —
+                                      Universität Stuttgart, WS 2025/26 (1.0)
 
-drwxr-xr-x  homelab.pi/         Raspberry Pi self-hosted stack:
-                                Home Assistant, NAS, web terminal,
-                                monitoring. Reverse-proxied through nginx,
-                                served only over a private ZeroTier net.
-                                tags: linux, docker, nginx, networking
+                                      Real-time multi-pass OpenGL pipeline that
+                                      reinterprets 3D scenes in Jean Giraud's
+                                      comic aesthetic: quantized toon shading,
+                                      constant pixel-width stroke rendering,
+                                      paper-texture overlay. Dual-method
+                                      silhouette extraction (screen-space
+                                      depth/normal discontinuities vs. mesh
+                                      adjacency-based front/back-facing tests),
+                                      temporal coherence via contour polyline
+                                      grouping + stroke-ID tracking across
+                                      frames to kill flicker under camera motion.
 
-drwxr-xr-x  visual-computing/   Coursework, scratch renderers, GLSL shaders,
-                                and real-time experiments from the M.Sc.
-                                tags: opengl, c++, glsl, graphics
+                                      tags: opengl, glsl, npr, real-time, c++
 
-drwxr-xr-x  3d-prints/          Assorted 3D-printed parts —
-                                keyboard cases, monitor brackets,
-                                custom Pi enclosures.
-                                tags: fusion-360, prusa, cad
+drwxr-xr-x  amulet-streaming/         MPEG Video Streaming on NVIDIA Falcor
+                                      HiWi @ VISUS — Universität Stuttgart
+                                      (Schmalstieg / Reina), 2025–
 
--rw-r--r--  dotfiles.git        Arch · Hyprland · Neovim · Zsh —
-                                my daily driver setup, kept in version control.
-                                tags: config, hyprland, neovim
+                                      Implementing the streaming pipeline for
+                                      the Amulet project: NVENC encode,
+                                      FFmpeg + Vulkan Video decode, NVcomp.
+
+                                      tags: vulkan, falcor, nvenc, ffmpeg, c++
+
+drwxr-xr-x  2dgs-forward-facing/      2D Gaussian Splatting for Forward-Facing
+                                      Multi-View Rendering
+                                      Research project — Universität Stuttgart
+                                      (Mori), 2025–
+
+                                      Stabilizing 2DGS training under narrow-
+                                      baseline forward-facing setups by combining
+                                      monocular depth priors with hemisphere-
+                                      gated opacity, addressing depth-collapse
+                                      failure modes.
+
+                                      tags: 2dgs, gaussian-splatting, pytorch

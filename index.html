@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css?v=20260509i" />
+  <link rel="stylesheet" href="/style.css?v=20260509j" />
   <script>
     // reveal once styles + first font face are ready, so no flash-of-fallback
     (function () {
@@ -82,9 +82,9 @@
       <p class="hero__role">
         <span class="acc">@as3ert</span>
         <span class="sep">·</span>
-        Visual Computing, M.Sc.
+        M.Sc. Visual Computing
         <span class="sep">·</span>
-        Stuttgart
+        Universität Stuttgart
       </p>
 
       <form class="prompt" id="prompt-form" autocomplete="off" spellcheck="false">
@@ -105,20 +105,21 @@
 
       <div class="about">
         <div class="about__prose">
-          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. Master's student in Visual Computing at the University of Stuttgart.</p>
-          <p>I work where hardware meets pixels: keyboard PCBs, 3D-printed parts, small renderers, a Raspberry Pi running more services than it should. <a href="#projects">A few of those</a> are below.</p>
-          <p>When I'm not on those, I'm probably reading graphics papers or arguing with CMake.</p>
+          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. M.Sc. Computer Science (Visual Computing track) at the <a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">University of Stuttgart</a>; B.Eng. from <a href="https://www.cuhk.edu.cn" target="_blank" rel="noopener">CUHK-Shenzhen</a>.</p>
+          <p>I work on real-time graphics: rendering pipelines, non-photorealistic shading, neural scene representations. Currently a HiWi at <span class="acc">VISUS</span>, hacking on MPEG video streaming for the Amulet project (NVIDIA Falcor + NVENC + Vulkan Video) under Schmalstieg / Reina, and a research project on 2D Gaussian Splatting with Dr. Shohei Mori.</p>
+          <p>When I'm not at a screen, I'm reading SIGGRAPH papers or arguing with CMake. <a href="#projects">A few projects</a> are below.</p>
         </div>
 
-        <pre class="neofetch" aria-label="neofetch-style summary"><span class="k">os</span>........... <span class="v acc">stuttgart, de</span>
-<span class="k">role</span>......... <span class="v">visual computing · m.sc</span>
-<span class="k">shell</span>........ <span class="v">zsh + tmux</span>
-<span class="k">editor</span>....... <span class="v">nvim</span>
-<span class="k">distro</span>....... <span class="v">arch linux</span>
-<span class="k">wm</span>........... <span class="v">hyprland</span>
-<span class="k">keyboard</span>..... <span class="v">hand-rolled · 60%</span>
-<span class="k">cwd</span>.......... <span class="v">~/projects</span>
-<span class="k">uptime</span>....... <span class="v">∞ (still counting)</span></pre>
+        <pre class="neofetch" aria-label="neofetch-style summary"><span class="k">os</span>............ <span class="v acc">stuttgart, de</span>
+<span class="k">role</span>.......... <span class="v">m.sc. visual computing</span>
+<span class="k">school</span>........ <span class="v">universität stuttgart</span>
+<span class="k">prev</span>.......... <span class="v">cuhk-shenzhen · b.eng cse</span>
+<span class="k">work</span>.......... <span class="v">hiwi @ visus · amulet</span>
+<span class="k">research</span>...... <span class="v">2d gaussian splatting</span>
+<span class="k">langs</span>......... <span class="v">c++ · python · cuda · glsl</span>
+<span class="k">stack</span>......... <span class="v">vulkan · opengl · falcor · pytorch</span>
+<span class="k">spoken</span>........ <span class="v">中文 · english · deutsch (a2)</span>
+<span class="k">uptime</span>........ <span class="v">∞ (still counting)</span></pre>
       </div>
     </section>
 
@@ -132,9 +133,9 @@
         <article class="proj" data-line>
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">as3ert-pcb<span class="ext">/</span></a></div>
-            <div class="proj__desc">Custom 60% mechanical keyboard — KiCad schematic + layout, firmware in Rust.</div>
-            <div class="proj__tags"><span>kicad</span><span>embedded-rust</span><span>hardware</span></div>
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">moebius-npr-renderer<span class="ext">/</span></a> <span class="proj__year">WS&nbsp;2025/26 · 1.0</span></div>
+            <div class="proj__desc">Mœbius-style non-photorealistic renderer for the <i>Practical Course Visual Computing</i> at Stuttgart — a real-time multi-pass OpenGL pipeline reinterpreting 3D scenes in Jean Giraud's comic aesthetic. Quantized toon shading, constant pixel-width stroke rendering, paper-texture overlay; dual-method silhouette extraction (screen-space depth/normal discontinuities vs. mesh adjacency-based front/back-facing tests); temporal coherence via contour polyline grouping and stroke-ID tracking to kill flicker under camera motion.</div>
+            <div class="proj__tags"><span>opengl</span><span>glsl</span><span>npr</span><span>real-time</span><span>c++</span></div>
           </div>
           <div class="proj__arrow">→</div>
         </article>
@@ -142,9 +143,9 @@
         <article class="proj" data-line>
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">homelab.pi<span class="ext">/</span></a></div>
-            <div class="proj__desc">Raspberry Pi self-hosted stack: Home Assistant, NAS, web terminal, monitoring. Reverse proxied through nginx, served only over a private ZeroTier network.</div>
-            <div class="proj__tags"><span>linux</span><span>docker</span><span>nginx</span><span>networking</span></div>
+            <div class="proj__name"><a href="https://www.visus.uni-stuttgart.de" target="_blank" rel="noopener">amulet-streaming<span class="ext">/</span></a> <span class="proj__year">2025 –</span></div>
+            <div class="proj__desc">HiWi at <span class="acc">VISUS</span> (Schmalstieg / Reina). Implementing the MPEG video-streaming pipeline for the <i>Amulet</i> project, built on NVIDIA's Falcor framework — NVENC for GPU encode, FFmpeg + Vulkan Video for decode, NVcomp for compression.</div>
+            <div class="proj__tags"><span>vulkan</span><span>falcor</span><span>nvenc</span><span>ffmpeg</span><span>c++</span></div>
           </div>
           <div class="proj__arrow">→</div>
         </article>
@@ -152,29 +153,9 @@
         <article class="proj" data-line>
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">visual-computing<span class="ext">/</span></a></div>
-            <div class="proj__desc">Coursework, scratch renderers, GLSL shaders, and real-time experiments from the M.Sc.</div>
-            <div class="proj__tags"><span>opengl</span><span>c++</span><span>glsl</span><span>graphics</span></div>
-          </div>
-          <div class="proj__arrow">→</div>
-        </article>
-
-        <article class="proj" data-line>
-          <div class="proj__perms">drwxr-xr-x</div>
-          <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">3d-prints<span class="ext">/</span></a></div>
-            <div class="proj__desc">Assorted 3D-printed parts — keyboard cases, monitor brackets, custom Pi enclosures.</div>
-            <div class="proj__tags"><span>fusion-360</span><span>prusa</span><span>cad</span></div>
-          </div>
-          <div class="proj__arrow">→</div>
-        </article>
-
-        <article class="proj" data-line>
-          <div class="proj__perms">-rw-r--r--</div>
-          <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">dotfiles<span class="ext">.git</span></a></div>
-            <div class="proj__desc">Arch · Hyprland · Neovim · Zsh — my daily driver setup, kept in version control.</div>
-            <div class="proj__tags"><span>config</span><span>hyprland</span><span>neovim</span></div>
+            <div class="proj__name"><a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">2dgs-forward-facing<span class="ext">/</span></a> <span class="proj__year">2025 –</span></div>
+            <div class="proj__desc">Research project with Dr. Shohei Mori on <b>2D Gaussian Splatting</b> for forward-facing multi-view rendering. Stabilizing 2DGS training under narrow-baseline setups by combining monocular depth priors with hemisphere-gated opacity, addressing depth-collapse failure modes.</div>
+            <div class="proj__tags"><span>2dgs</span><span>gaussian-splatting</span><span>pytorch</span><span>research</span></div>
           </div>
           <div class="proj__arrow">→</div>
         </article>
@@ -191,23 +172,30 @@
 
         <div class="log__entry" data-line>
           <div class="log__hash">HEAD → main</div>
-          <div class="log__meta">Stuttgart, DE · 2024–present</div>
-          <div class="log__msg">M.Sc. Visual Computing — University of Stuttgart</div>
-          <div class="log__sub">graphics, vision, simulation</div>
+          <div class="log__meta">Nov 2025 – present · Stuttgart, DE</div>
+          <div class="log__msg">HiWi · VISUS, Universität Stuttgart</div>
+          <div class="log__sub">Schmalstieg / Reina · MPEG video streaming on NVIDIA Falcor (Amulet)</div>
+        </div>
+
+        <div class="log__entry" data-line>
+          <div class="log__hash">research</div>
+          <div class="log__meta">Oct 2025 – present · Stuttgart, DE</div>
+          <div class="log__msg">Research project · 2D Gaussian Splatting</div>
+          <div class="log__sub">Mori · narrow-baseline forward-facing rendering</div>
+        </div>
+
+        <div class="log__entry" data-line>
+          <div class="log__hash">edu</div>
+          <div class="log__meta">Oct 2024 – present · Stuttgart, DE</div>
+          <div class="log__msg">M.Sc. Computer Science · Visual Computing track</div>
+          <div class="log__sub">Universität Stuttgart · GPA 1.8/5.0 (gut)</div>
         </div>
 
         <div class="log__entry" data-line>
           <div class="log__hash">prev</div>
-          <div class="log__meta">undergrad · Computer Science</div>
-          <div class="log__msg">B.Sc. Computer Science</div>
-          <div class="log__sub">first keyboard, first soldering iron, first segfault</div>
-        </div>
-
-        <div class="log__entry" data-line>
-          <div class="log__hash">init</div>
-          <div class="log__meta">root commit</div>
-          <div class="log__msg">started taking things apart to see how they worked</div>
-          <div class="log__sub">never really stopped</div>
+          <div class="log__meta">Sep 2020 – Jun 2024 · Shenzhen, CN</div>
+          <div class="log__msg">B.Eng. Computer Science &amp; Engineering · CUHK-Shenzhen</div>
+          <div class="log__sub">GPA 3.393/4.0 · Bowen Scholarship · Dean's List '22-'23</div>
         </div>
 
       </div>
@@ -219,24 +207,28 @@
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
       <div class="contact">
-        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">fastest way to reach me is by email — happy to talk graphics, hardware, or anything else.</p>
+        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">fastest way to reach me is by email — happy to talk graphics, rendering, research, or anything in between.</p>
 
         <ul>
           <li>
             <span class="k">email</span>
-            <span><a href="mailto:as3ertpro@gmail.com">as3ertpro@gmail.com</a></span>
+            <span><a href="mailto:guangxin@guangxinzhao.com">guangxin@guangxinzhao.com</a></span>
           </li>
           <li>
             <span class="k">git</span>
             <span><a href="https://github.com/as3ert" target="_blank" rel="noopener">github.com/as3ert</a></span>
           </li>
           <li>
-            <span class="k">geo</span>
-            <span style="color:var(--fg)">stuttgart, de · 48.7758° N, 9.1829° E</span>
+            <span class="k">cv</span>
+            <span><a href="https://resume.guangxinzhao.com" target="_blank" rel="noopener">resume.guangxinzhao.com</a></span>
           </li>
           <li>
-            <span class="k">pgp</span>
-            <span style="color:var(--fg-mute)">on request</span>
+            <span class="k">geo</span>
+            <span style="color:var(--fg)">Stuttgart, Germany</span>
+          </li>
+          <li>
+            <span class="k">lang</span>
+            <span style="color:var(--fg-mute)">中文 · english · deutsch (a2)</span>
           </li>
         </ul>
       </div>
@@ -255,6 +247,6 @@
     </span>
   </footer>
 
-  <script src="/script.js?v=20260509i" defer></script>
+  <script src="/script.js?v=20260509j" defer></script>
 </body>
 </html>

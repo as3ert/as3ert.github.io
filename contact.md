@@ -1,8 +1,8 @@
 # ~/.contact
 
-email   as3ertpro@gmail.com
+email   guangxin@guangxinzhao.com
 git     github.com/as3ert
-geo     Stuttgart, Germany — 48.7758° N, 9.1829° E
-pgp     on request
+geo     Stuttgart, Germany
+lang    Mandarin (native) · English (TOEFL 98) · German (A2)
 
 # fastest way to reach me is by email.

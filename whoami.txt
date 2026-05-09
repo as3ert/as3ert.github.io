@@ -1,3 +1,4 @@
 guangxin · as3ert · Stuttgart, DE
-Visual Computing M.Sc. · University of Stuttgart
-uid=1000(as3ert) gid=1000(as3ert) groups=hardware,graphics,coffee
+M.Sc. Computer Science / Visual Computing · Universität Stuttgart
+B.Eng. CSE · CUHK-Shenzhen, 2024
+uid=1000(as3ert) gid=1000(as3ert) groups=graphics,rendering,coffee
