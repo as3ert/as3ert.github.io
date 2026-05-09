@@ -20,9 +20,9 @@
   --tracking-tight: -0.04em;
   --tracking-wide:   0.18em;
 
-  --gutter: clamp(1.25rem, 5vw, 5rem);
-  --col:    min(64rem, 100%);   /* up to ~1024px on desktop */
-  --col-prose: min(60ch, 100%); /* tighter cap for body copy */
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --col:    min(96rem, 100%);    /* up to ~1536px on wide desktop */
+  --col-prose: min(64ch, 100%);  /* tighter cap for body copy */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -209,8 +209,7 @@ main {
 section {
   padding: 5rem 0;
   max-width: var(--col);
-  margin-left: auto;
-  margin-right: auto;
+  /* left-aligned within main; per-block widths below keep prose readable */
 }
 
 .cmd {
