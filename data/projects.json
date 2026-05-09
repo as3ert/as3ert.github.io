@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "perms": "drwxr-xr-x",
+      "name": "moebius-npr-renderer",
+      "ext": "/",
+      "url": "https://github.com/as3ert",
+      "year": "WS&nbsp;2025/26 · 1.0",
+      "desc": "Mœbius-style non-photorealistic renderer for the <i>Practical Course Visual Computing</i> at Stuttgart — a real-time multi-pass OpenGL pipeline reinterpreting 3D scenes in Jean Giraud's comic aesthetic. Quantized toon shading, constant pixel-width stroke rendering, paper-texture overlay; dual-method silhouette extraction (screen-space depth/normal discontinuities vs. mesh adjacency-based front/back-facing tests); temporal coherence via contour polyline grouping and stroke-ID tracking to kill flicker under camera motion.",
+      "tags": ["opengl", "glsl", "npr", "real-time", "c++"]
+    },
+    {
+      "perms": "drwxr-xr-x",
+      "name": "amulet-streaming",
+      "ext": "/",
+      "url": "https://www.visus.uni-stuttgart.de",
+      "year": "2025 –",
+      "desc": "HiWi at <span class=\"acc\">VISUS</span>, Universität Stuttgart. Implementing the MPEG video-streaming pipeline for the <i>Amulet</i> project, built on NVIDIA's Falcor framework — NVENC for GPU encode, FFmpeg + Vulkan Video for decode, NVcomp for compression.",
+      "tags": ["vulkan", "falcor", "nvenc", "ffmpeg", "c++"]
+    },
+    {
+      "perms": "drwxr-xr-x",
+      "name": "2dgs-forward-facing",
+      "ext": "/",
+      "url": "https://www.uni-stuttgart.de",
+      "year": "2025 –",
+      "desc": "Research project on <b>2D Gaussian Splatting</b> for forward-facing multi-view rendering. Stabilizing 2DGS training under narrow-baseline setups by combining monocular depth priors with hemisphere-gated opacity, addressing depth-collapse failure modes.",
+      "tags": ["2dgs", "gaussian-splatting", "pytorch", "research"]
+    }
+  ]
+}

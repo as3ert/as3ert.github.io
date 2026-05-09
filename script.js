@@ -3,6 +3,133 @@
 /* ========================================================== */
 
 (() => {
+  // ---- data-driven content: fetch JSON, render page + cache ---
+  // Both the page sections and the terminal `cat` output are rendered
+  // from these JSON files, so editing /data/*.json updates everything.
+  const SITE = {};
+
+  const fetchJson = async (url) => {
+    const r = await fetch(url, { cache: "no-cache" });
+    if (!r.ok) throw new Error("data fetch failed: " + url);
+    return r.json();
+  };
+
+  const dotsFor = (k, total = 13) =>
+    "." .repeat(Math.max(1, total - String(k).length));
+
+  const renderHero = (d) => {
+    const $name = document.getElementById("hero-name");
+    const $role = document.getElementById("hero-role");
+    if ($name) $name.innerHTML = (d.name || "").replace(/ /g, "&nbsp;");
+    if ($role && d.subtitle) {
+      $role.innerHTML = d.subtitle
+        .map((s, i, arr) => {
+          const txt = s.acc
+            ? `<span class="acc">${s.text}</span>`
+            : s.text;
+          return i < arr.length - 1
+            ? txt + ' <span class="sep">·</span> '
+            : txt;
+        })
+        .join("");
+    }
+  };
+
+  const renderAbout = (d) => {
+    const $prose = document.getElementById("about-prose");
+    if ($prose) {
+      $prose.innerHTML = (d.paragraphs || [])
+        .map((p) => `<p data-line>${p}</p>`)
+        .join("");
+    }
+    const $neo = document.getElementById("about-neofetch");
+    if ($neo && d.neofetch) {
+      $neo.innerHTML = d.neofetch
+        .map(([k, v, accent]) => {
+          const cls = accent ? "v acc" : "v";
+          return `<span class="k">${k}</span>${dotsFor(k)} <span class="${cls}">${v}</span>`;
+        })
+        .join("\n");
+    }
+  };
+
+  const renderProjects = (d) => {
+    const $list = document.getElementById("projects-list");
+    if (!$list || !d.items) return;
+    $list.innerHTML = d.items
+      .map((p) => `
+        <article class="proj" data-line>
+          <div class="proj__perms">${p.perms || "drwxr-xr-x"}</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="${p.url}" target="_blank" rel="noopener">${p.name}<span class="ext">${p.ext || ""}</span></a> ${p.year ? `<span class="proj__year">${p.year}</span>` : ""}</div>
+            <div class="proj__desc">${p.desc}</div>
+            <div class="proj__tags">${(p.tags || []).map((t) => `<span>${t}</span>`).join("")}</div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+      `)
+      .join("");
+  };
+
+  const renderLog = (d) => {
+    const $list = document.getElementById("log-list");
+    if (!$list || !d.items) return;
+    $list.innerHTML = d.items
+      .map((e) => `
+        <div class="log__entry" data-line>
+          <div class="log__hash">${e.hash}</div>
+          <div class="log__meta">${e.meta}</div>
+          <div class="log__msg">${e.msg}</div>
+          <div class="log__sub">${e.sub}</div>
+        </div>
+      `)
+      .join("");
+  };
+
+  const renderContact = (d) => {
+    const $intro = document.getElementById("contact-intro");
+    if ($intro && d.intro) $intro.textContent = d.intro;
+    const $list = document.getElementById("contact-list");
+    if (!$list || !d.items) return;
+    $list.innerHTML = d.items
+      .map((it) => {
+        const valHtml = it.href
+          ? `<a href="${it.href}"${it.external ? ' target="_blank" rel="noopener"' : ""}>${it.v}</a>`
+          : `<span style="color:${it.muted ? "var(--fg-mute)" : "var(--fg)"}">${it.v}</span>`;
+        return `<li data-line><span class="k">${it.k}</span><span>${valHtml}</span></li>`;
+      })
+      .join("");
+  };
+
+  // public: kicked off below alongside fonts.ready so layout is final
+  // before line-numbers measure
+  const loadAndRenderAll = async () => {
+    try {
+      const [profile, about, projects, log, contact] = await Promise.all([
+        fetchJson("/data/profile.json"),
+        fetchJson("/data/about.json"),
+        fetchJson("/data/projects.json"),
+        fetchJson("/data/log.json"),
+        fetchJson("/data/contact.json"),
+      ]);
+      SITE.profile = profile;
+      SITE.about = about;
+      SITE.projects = projects;
+      SITE.log = log;
+      SITE.contact = contact;
+      renderHero(profile);
+      renderAbout(about);
+      renderProjects(projects);
+      renderLog(log);
+      renderContact(contact);
+    } catch (e) {
+      console.error("[data]", e);
+    }
+  };
+  // expose for cat handler below
+  window.__siteData = SITE;
+  window.__siteLoaded = loadAndRenderAll();
+
   // ---- keep browser's default scroll-restore on refresh -------
   // strip any leftover #anchor from the URL (so refresh doesn't teleport
   // to a section the user clicked earlier)
@@ -110,47 +237,57 @@
     $date.textContent = d.toISOString().slice(0, 10);
   }
 
-  // ---- gutter line numbers: one per [data-line] across page ---
+  // ---- gutter line numbers: rebuilt whenever content changes ---
   const $linenos = document.querySelector(".linenos");
-  const dataLineEls = document.querySelectorAll("[data-line]");
-  const lineSpans = [];
+  let lineSpans = [];
 
-  if ($linenos && dataLineEls.length) {
+  const positionLines = () => {
+    lineSpans.forEach(({ el, span }) => {
+      // offsetTop is relative to main (position:relative)
+      span.style.top = (el.offsetTop + 4) + "px";
+    });
+  };
+
+  const updateActiveLine = () => {
+    if (!lineSpans.length) return;
+    const probe = window.scrollY + window.innerHeight * 0.25;
+    let activeIdx = 0;
+    lineSpans.forEach(({ el }, i) => {
+      if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
+    });
+    lineSpans.forEach(({ span }, i) =>
+      span.classList.toggle("is-active", i === activeIdx)
+    );
+  };
+
+  const setupLineNumbers = () => {
+    if (!$linenos) return;
     $linenos.innerHTML = "";
-    dataLineEls.forEach((el, i) => {
+    lineSpans = [];
+    const els = document.querySelectorAll("[data-line]");
+    els.forEach((el, i) => {
       const span = document.createElement("span");
       span.textContent = String(i + 1).padStart(2, "0");
       $linenos.appendChild(span);
       lineSpans.push({ el, span });
     });
+    positionLines();
+    updateActiveLine();
+  };
 
-    const positionLines = () => {
-      lineSpans.forEach(({ el, span }) => {
-        // offsetTop is relative to main (which is position:relative)
-        span.style.top = (el.offsetTop + 4) + "px";
-      });
-    };
+  let raf = 0;
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
 
-    const updateActiveLine = () => {
-      const probe = window.scrollY + window.innerHeight * 0.25;
-      let activeIdx = 0;
-      lineSpans.forEach(({ el }, i) => {
-        if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
-      });
-      lineSpans.forEach(({ span }, i) =>
-        span.classList.toggle("is-active", i === activeIdx)
-      );
-    };
+  // initial pass for whatever's static + listeners
+  setupLineNumbers();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setupLineNumbers);
+  window.addEventListener("load", setupLineNumbers);
+  window.addEventListener("resize", () => { positionLines(); updateActiveLine(); });
+  window.addEventListener("scroll", onScroll, { passive: true });
 
-    let raf = 0;
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
-
-    const init = () => { positionLines(); updateActiveLine(); };
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init);
-    window.addEventListener("load", init);
-    window.addEventListener("resize", init);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    init();
+  // re-run once data arrives — rendered sections have new [data-line] items
+  if (window.__siteLoaded) {
+    window.__siteLoaded.then(() => requestAnimationFrame(setupLineNumbers));
   }
 
   // ---- section scroll-spy ------------------------------------
@@ -227,36 +364,99 @@
   const $in = document.getElementById("prompt-input");
   const $out = document.getElementById("term-output");
 
-  // file resolver: maps shell-y filenames to real URLs
-  const fileMap = {
-    "about":      "/about.md",
-    "about.md":   "/about.md",
-    ".about":     "/about.md",
-    "~/.about":   "/about.md",
-    "contact":    "/contact.md",
-    "contact.md": "/contact.md",
-    ".contact":   "/contact.md",
-    "~/.contact": "/contact.md",
-    "projects":   "/projects.md",
-    "projects.md":"/projects.md",
-    "cv":         "/cv.md",
-    "cv.md":      "/cv.md",
-    "cv.pdf":     "/cv.md",
-    "whoami":     "/whoami.txt",
-    "uname":      "/uname.txt",
-    "uname.txt":  "/uname.txt",
+  // file aliases — what shell name maps to what data key
+  const fileAlias = {
+    "about":      "about",
+    "about.md":   "about",
+    ".about":     "about",
+    "~/.about":   "about",
+    "contact":    "contact",
+    "contact.md": "contact",
+    ".contact":   "contact",
+    "~/.contact": "contact",
+    "projects":   "projects",
+    "projects.md":"projects",
+    "cv":         "cv",
+    "cv.md":      "cv",
+    "cv.pdf":     "cv",
+    "whoami":     "whoami",
+    "whoami.txt": "whoami",
+    "uname":      "uname",
+    "uname.txt":  "uname",
   };
 
-  const cache = new Map();
-  const fetchText = async (url) => {
-    if (cache.has(url)) return cache.get(url);
-    try {
-      const r = await fetch(url, { cache: "no-cache" });
-      if (!r.ok) return null;
-      const t = await r.text();
-      cache.set(url, t);
-      return t;
-    } catch (_) { return null; }
+  const stripTags = (s) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = String(s || "");
+    return tmp.textContent || "";
+  };
+
+  // formatters: turn live JSON into terminal-friendly markdown text
+  const fileFormatters = {
+    about: () => {
+      const d = SITE.about;
+      if (!d) return "(loading…)";
+      const lines = ["# ~/.about", ""];
+      d.paragraphs.forEach((p) => { lines.push(stripTags(p)); lines.push(""); });
+      return lines.join("\n").trim();
+    },
+    contact: () => {
+      const d = SITE.contact;
+      if (!d) return "(loading…)";
+      const lines = ["# ~/.contact", ""];
+      d.items.forEach((it) => {
+        lines.push(`${it.k.padEnd(7)} ${it.v}`);
+      });
+      if (d.intro) { lines.push("", "# " + d.intro); }
+      return lines.join("\n");
+    },
+    projects: () => {
+      const d = SITE.projects;
+      if (!d) return "(loading…)";
+      const lines = ["# ~/projects/", ""];
+      d.items.forEach((p) => {
+        const head = `${p.perms}  ${p.name}${p.ext || ""}` +
+          (p.year ? `  (${stripTags(p.year)})` : "");
+        lines.push(head);
+        lines.push(stripTags(p.desc).split("\n").map(l => "  " + l).join("\n"));
+        if (p.tags) lines.push("  tags: " + p.tags.join(", "));
+        lines.push("");
+      });
+      return lines.join("\n");
+    },
+    cv: () => {
+      const lines = ["# ~/cv.md", ""];
+      lines.push("Web version: https://resume.guangxinzhao.com");
+      lines.push("");
+      if (SITE.log && SITE.log.items) {
+        lines.push("## TIMELINE", "");
+        SITE.log.items.forEach((e) => {
+          lines.push(stripTags(e.meta));
+          lines.push("  " + stripTags(e.msg));
+          lines.push("  " + stripTags(e.sub));
+          lines.push("");
+        });
+      }
+      if (SITE.contact && SITE.contact.items) {
+        lines.push("## CONTACT", "");
+        SITE.contact.items.forEach((it) => {
+          lines.push(`${it.k.padEnd(7)} ${it.v}`);
+        });
+      }
+      return lines.join("\n");
+    },
+    whoami: () => {
+      const p = SITE.profile;
+      if (!p) return "(loading…)";
+      const sub = (p.subtitle || []).map((s) => s.text).join(" · ");
+      return [
+        p.name,
+        sub,
+        "uid=1000(as3ert) gid=1000(as3ert) groups=graphics,rendering,coffee",
+      ].join("\n");
+    },
+    uname: () =>
+      "Linux guangxinzhao.com 6.13.0-amber-crt #1 SMP x86_64 GNU/Caffeine",
   };
 
   const print = (html) => { $out.innerHTML = html; };
@@ -288,17 +488,21 @@
     return s;
   };
 
-  const printFile = async (label, url, fallback) => {
-    print(`<span class="term-head">$ ${escapeHtml(label)}</span>\n<span class="term-rule">─── reading ${escapeHtml(url)} ───</span>`);
-    const t = await fetchText(url);
-    if (t === null) {
-      print(fallback || `<span class="err">i/o error:</span> ${escapeHtml(url)}`);
+  const printFile = async (label, key) => {
+    const fn = fileFormatters[key];
+    if (!fn) {
+      print(`<span class="err">no such file:</span> ${escapeHtml(key)}`);
       return;
     }
+    // wait for site data if it isn't in yet
+    if (!SITE[key === "uname" ? "_uname" : (key === "cv" ? "log" : key)]) {
+      try { await window.__siteLoaded; } catch (_) {}
+    }
+    const text = fn();
     print(
       `<span class="term-head">$ ${escapeHtml(label)}</span>\n` +
-      `<span class="term-rule">─── ${escapeHtml(url)} ───</span>\n` +
-      `<span class="term-body">${renderMd(t)}</span>`
+      `<span class="term-rule">─── from /data/${escapeHtml(key)}.json ───</span>\n` +
+      `<span class="term-body">${renderMd(text)}</span>`
     );
   };
 
@@ -411,40 +615,41 @@
       histIdx = cmdHistory.length;
       const cmd = raw.toLowerCase();
 
-      // cat <file> — fetches a real file from the server
+      // cat <file> — formats live JSON data from /data/*.json
       if (cmd.startsWith("cat ")) {
         const arg = raw.slice(4).trim();
-        const url = fileMap[arg.toLowerCase()];
-        if (!url) {
+        const key = fileAlias[arg.toLowerCase()];
+        if (!key) {
           print(`cat: <b>${escapeHtml(arg)}</b>: <span class="err">no such file</span>`);
           return;
         }
-        await printFile(`cat ${arg}`, url);
+        await printFile(`cat ${arg}`, key);
         return;
       }
 
       // ls / ls -la — listing reflects what's actually fetchable
-      if (cmd === "ls") { print(`about.md  contact.md  projects.md  cv.md  whoami.txt  uname.txt`); return; }
+      if (cmd === "ls") { print(`about  contact  projects  cv  whoami  uname`); return; }
       if (cmd === "ls -la" || cmd === "ls -a") {
         print(
 `drwx------  .ssh/
 drwx------  .secrets/
--rw-r--r--  about.md
--rw-r--r--  contact.md
--rw-r--r--  projects.md
--rw-r--r--  cv.md
--rw-r--r--  whoami.txt
--rw-r--r--  uname.txt`
+drwxr-xr-x  data/                 <span style="color:var(--fg-mute)">json source of truth</span>
+-rw-r--r--  about     <span style="color:var(--fg-mute)">→ /data/about.json</span>
+-rw-r--r--  contact   <span style="color:var(--fg-mute)">→ /data/contact.json</span>
+-rw-r--r--  projects  <span style="color:var(--fg-mute)">→ /data/projects.json</span>
+-rw-r--r--  cv        <span style="color:var(--fg-mute)">→ /data/log.json + /data/contact.json</span>
+-rw-r--r--  whoami    <span style="color:var(--fg-mute)">→ /data/profile.json</span>
+-rw-r--r--  uname`
         );
         return;
       }
 
-      // these all fetch real files
-      if (cmd === "whoami")              { await printFile("whoami", "/whoami.txt"); return; }
-      if (cmd === "uname" || cmd === "uname -a") { await printFile("uname -a", "/uname.txt"); return; }
-      if (cmd === "contact")             { await printFile("cat ~/.contact", "/contact.md"); return; }
-      if (cmd === "cv")                  { await printFile("cat ~/cv.md", "/cv.md"); return; }
-      if (cmd === "about")               { await printFile("cat ~/.about", "/about.md"); return; }
+      // bare commands: same data, presented as 'cat <thing>'
+      if (cmd === "whoami")              { await printFile("whoami", "whoami"); return; }
+      if (cmd === "uname" || cmd === "uname -a") { await printFile("uname -a", "uname"); return; }
+      if (cmd === "contact")             { await printFile("cat ~/.contact", "contact"); return; }
+      if (cmd === "cv")                  { await printFile("cat ~/cv.md", "cv"); return; }
+      if (cmd === "about")               { await printFile("cat ~/.about", "about"); return; }
 
       // synchronous fixed responses
       const fixed = {

@@ -1,0 +1,10 @@
+{
+  "intro": "fastest way to reach me is by email — happy to talk graphics, rendering, research, or anything in between.",
+  "items": [
+    { "k": "email", "v": "guangxin@guangxinzhao.com", "href": "mailto:guangxin@guangxinzhao.com" },
+    { "k": "git",   "v": "github.com/as3ert",         "href": "https://github.com/as3ert", "external": true },
+    { "k": "cv",    "v": "resume.guangxinzhao.com",   "href": "https://resume.guangxinzhao.com", "external": true },
+    { "k": "geo",   "v": "Stuttgart, Germany" },
+    { "k": "lang",  "v": "中文 · english · deutsch (a2)", "muted": true }
+  ]
+}

@@ -33,19 +33,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css?v=20260509x" />
+  <link rel="stylesheet" href="/style.css?v=20260510a" />
   <script>
-    // reveal once styles + first font face are ready, so no flash-of-fallback
+    // reveal once fonts AND site data are ready, so we don't paint empty
+    // sections briefly while JSON loads. 1500ms safety net just in case.
     (function () {
-      var reveal = function () { document.body && document.body.classList.add('is-ready'); };
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(reveal);
-        // safety net: never hide longer than 600ms
-        setTimeout(reveal, 600);
-      } else {
-        window.addEventListener('load', reveal);
-        setTimeout(reveal, 600);
-      }
+      var done = false;
+      var reveal = function () {
+        if (done) return;
+        done = true;
+        document.body && document.body.classList.add('is-ready');
+      };
+      window.__reveal = reveal;
+      setTimeout(reveal, 1500); // hard safety
+      var fontsP = (document.fonts && document.fonts.ready) || Promise.resolve();
+      // wait for window.__siteLoaded to exist (set by deferred script.js)
+      var dataP = new Promise(function (resolve) {
+        var n = 0;
+        var t = setInterval(function () {
+          if (window.__siteLoaded) {
+            clearInterval(t);
+            resolve(window.__siteLoaded);
+          } else if (++n > 60) {
+            clearInterval(t);
+            resolve(); // give up after ~3s, let safety reveal
+          }
+        }, 50);
+      });
+      Promise.all([fontsP, dataP]).then(reveal);
     })();
   </script>
 </head>
@@ -76,16 +91,8 @@
     <section id="whoami" class="hero" data-line>
       <pre class="boot" aria-hidden="true"><div><span class="dim">&gt;</span> last login: today &middot; <span class="warn">stuttgart, de</span></div><div><span class="dim">&gt;</span> mounting <span class="warn">/home/guangxin</span> ............ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> spawning shell ..................... <span class="ok">ok</span></div><div>&nbsp;</div></pre>
 
-      <h1 class="hero__name" data-line>
-        Guangxin&nbsp;Zhao
-      </h1>
-      <p class="hero__role" data-line>
-        <span class="acc">@as3ert</span>
-        <span class="sep">·</span>
-        M.Sc. Visual Computing
-        <span class="sep">·</span>
-        Universität Stuttgart
-      </p>
+      <h1 class="hero__name" data-line id="hero-name"></h1>
+      <p class="hero__role" data-line id="hero-role"></p>
 
       <form class="prompt" id="prompt-form" data-line autocomplete="off" spellcheck="false">
         <span class="prompt__sym">$</span>
@@ -104,22 +111,8 @@
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
       <div class="about">
-        <div class="about__prose">
-          <p data-line>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. M.Sc. Computer Science (Visual Computing track) at the <a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">University of Stuttgart</a>; B.Eng. from <a href="https://www.cuhk.edu.cn" target="_blank" rel="noopener">CUHK-Shenzhen</a>.</p>
-          <p data-line>I work on real-time graphics: rendering pipelines, non-photorealistic shading, neural scene representations. Currently a HiWi at <span class="acc">VISUS</span>, hacking on MPEG video streaming for the Amulet project (NVIDIA Falcor + NVENC + Vulkan Video), alongside a research project on 2D Gaussian Splatting for narrow-baseline forward-facing rendering.</p>
-          <p data-line>When I'm not at a screen, I'm reading SIGGRAPH papers or arguing with CMake. <a href="#projects">See projects →</a></p>
-        </div>
-
-        <pre class="neofetch" data-line aria-label="neofetch-style summary"><span class="k">os</span>............ <span class="v acc">stuttgart, de</span>
-<span class="k">role</span>.......... <span class="v">m.sc. visual computing</span>
-<span class="k">school</span>........ <span class="v">universität stuttgart</span>
-<span class="k">prev</span>.......... <span class="v">cuhk-shenzhen · b.eng cse</span>
-<span class="k">work</span>.......... <span class="v">hiwi @ visus · amulet</span>
-<span class="k">research</span>...... <span class="v">2d gaussian splatting</span>
-<span class="k">langs</span>......... <span class="v">c++ · python · cuda · glsl</span>
-<span class="k">stack</span>......... <span class="v">vulkan · opengl · falcor · pytorch</span>
-<span class="k">spoken</span>........ <span class="v">中文 · english · deutsch (a2)</span>
-<span class="k">uptime</span>........ <span class="v">∞ (still counting)</span></pre>
+        <div class="about__prose" id="about-prose"></div>
+        <pre class="neofetch" data-line aria-label="neofetch-style summary" id="about-neofetch"></pre>
       </div>
     </section>
 
@@ -128,39 +121,7 @@
       <div class="cmd">ls -la <span style="color:var(--fg)">~/projects/</span><span class="num">[03]</span></div>
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
-      <div class="projects">
-
-        <article class="proj" data-line>
-          <div class="proj__perms">drwxr-xr-x</div>
-          <div class="proj__main">
-            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">moebius-npr-renderer<span class="ext">/</span></a> <span class="proj__year">WS&nbsp;2025/26 · 1.0</span></div>
-            <div class="proj__desc">Mœbius-style non-photorealistic renderer for the <i>Practical Course Visual Computing</i> at Stuttgart — a real-time multi-pass OpenGL pipeline reinterpreting 3D scenes in Jean Giraud's comic aesthetic. Quantized toon shading, constant pixel-width stroke rendering, paper-texture overlay; dual-method silhouette extraction (screen-space depth/normal discontinuities vs. mesh adjacency-based front/back-facing tests); temporal coherence via contour polyline grouping and stroke-ID tracking to kill flicker under camera motion.</div>
-            <div class="proj__tags"><span>opengl</span><span>glsl</span><span>npr</span><span>real-time</span><span>c++</span></div>
-          </div>
-          <div class="proj__arrow">→</div>
-        </article>
-
-        <article class="proj" data-line>
-          <div class="proj__perms">drwxr-xr-x</div>
-          <div class="proj__main">
-            <div class="proj__name"><a href="https://www.visus.uni-stuttgart.de" target="_blank" rel="noopener">amulet-streaming<span class="ext">/</span></a> <span class="proj__year">2025 –</span></div>
-            <div class="proj__desc">HiWi at <span class="acc">VISUS</span>, Universität Stuttgart. Implementing the MPEG video-streaming pipeline for the <i>Amulet</i> project, built on NVIDIA's Falcor framework — NVENC for GPU encode, FFmpeg + Vulkan Video for decode, NVcomp for compression.</div>
-            <div class="proj__tags"><span>vulkan</span><span>falcor</span><span>nvenc</span><span>ffmpeg</span><span>c++</span></div>
-          </div>
-          <div class="proj__arrow">→</div>
-        </article>
-
-        <article class="proj" data-line>
-          <div class="proj__perms">drwxr-xr-x</div>
-          <div class="proj__main">
-            <div class="proj__name"><a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">2dgs-forward-facing<span class="ext">/</span></a> <span class="proj__year">2025 –</span></div>
-            <div class="proj__desc">Research project on <b>2D Gaussian Splatting</b> for forward-facing multi-view rendering. Stabilizing 2DGS training under narrow-baseline setups by combining monocular depth priors with hemisphere-gated opacity, addressing depth-collapse failure modes.</div>
-            <div class="proj__tags"><span>2dgs</span><span>gaussian-splatting</span><span>pytorch</span><span>research</span></div>
-          </div>
-          <div class="proj__arrow">→</div>
-        </article>
-
-      </div>
+      <div class="projects" id="projects-list"></div>
     </section>
 
     <!-- ====================================================== -->
@@ -168,37 +129,7 @@
       <div class="cmd">git log <span style="color:var(--fg)">--my-life --oneline</span><span class="num">[04]</span></div>
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
-      <div class="log">
-
-        <div class="log__entry" data-line>
-          <div class="log__hash">HEAD → main</div>
-          <div class="log__meta">Nov 2025 – present · Stuttgart, DE</div>
-          <div class="log__msg">HiWi · VISUS, Universität Stuttgart</div>
-          <div class="log__sub">MPEG video streaming on NVIDIA Falcor · Amulet project</div>
-        </div>
-
-        <div class="log__entry" data-line>
-          <div class="log__hash">research</div>
-          <div class="log__meta">Oct 2025 – present · Stuttgart, DE</div>
-          <div class="log__msg">Research project · 2D Gaussian Splatting</div>
-          <div class="log__sub">Narrow-baseline forward-facing rendering · monocular depth + hemisphere-gated opacity</div>
-        </div>
-
-        <div class="log__entry" data-line>
-          <div class="log__hash">edu</div>
-          <div class="log__meta">Oct 2024 – present · Stuttgart, DE</div>
-          <div class="log__msg">M.Sc. Computer Science · Visual Computing track</div>
-          <div class="log__sub">Universität Stuttgart · GPA 1.8/5.0 (gut)</div>
-        </div>
-
-        <div class="log__entry" data-line>
-          <div class="log__hash">prev</div>
-          <div class="log__meta">Sep 2020 – Jun 2024 · Shenzhen, CN</div>
-          <div class="log__msg">B.Eng. Computer Science &amp; Engineering · CUHK-Shenzhen</div>
-          <div class="log__sub">GPA 3.393/4.0 · Bowen Scholarship · Dean's List '22-'23</div>
-        </div>
-
-      </div>
+      <div class="log" id="log-list"></div>
     </section>
 
     <!-- ====================================================== -->
@@ -207,30 +138,8 @@
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
       <div class="contact">
-        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">fastest way to reach me is by email — happy to talk graphics, rendering, research, or anything in between.</p>
-
-        <ul>
-          <li data-line>
-            <span class="k">email</span>
-            <span><a href="mailto:guangxin@guangxinzhao.com">guangxin@guangxinzhao.com</a></span>
-          </li>
-          <li data-line>
-            <span class="k">git</span>
-            <span><a href="https://github.com/as3ert" target="_blank" rel="noopener">github.com/as3ert</a></span>
-          </li>
-          <li data-line>
-            <span class="k">cv</span>
-            <span><a href="https://resume.guangxinzhao.com" target="_blank" rel="noopener">resume.guangxinzhao.com</a></span>
-          </li>
-          <li data-line>
-            <span class="k">geo</span>
-            <span style="color:var(--fg)">Stuttgart, Germany</span>
-          </li>
-          <li data-line>
-            <span class="k">lang</span>
-            <span style="color:var(--fg-mute)">中文 · english · deutsch (a2)</span>
-          </li>
-        </ul>
+        <p id="contact-intro" style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;"></p>
+        <ul id="contact-list"></ul>
       </div>
     </section>
 
@@ -247,6 +156,6 @@
     </span>
   </footer>
 
-  <script src="/script.js?v=20260509v" defer></script>
+  <script src="/script.js?v=20260510a" defer></script>
 </body>
 </html>
