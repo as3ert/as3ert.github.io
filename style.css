@@ -386,7 +386,7 @@ section {
 @media (min-width: 760px) {
   .about { grid-template-columns: 1.1fr 1fr; align-items: start; }
 }
-.about p { margin-bottom: 1rem; max-width: 56ch; }
+.about p { margin-bottom: 1rem; }
 .about p .acc { color: var(--amber); }
 .about p a {
   color: var(--fg);
