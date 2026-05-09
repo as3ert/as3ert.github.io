@@ -34,6 +34,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  scroll-snap-type: y proximity;  /* gently snap to section boundaries */
 }
 
 body {
@@ -211,8 +212,13 @@ main {
    sections
    ============================================================ */
 section {
+  min-height: 100vh;          /* one section per screen-height */
   padding: 5rem 0;
   max-width: var(--col);
+  scroll-snap-align: start;   /* snap top of section to top of viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .cmd {
@@ -237,10 +243,7 @@ section {
    hero / boot
    ============================================================ */
 .hero {
-  min-height: calc(100vh - 88px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* section already min-height: 100vh + flex centered; nothing extra */
   padding-top: 0;
 }
 
