@@ -296,12 +296,13 @@ section {
 }
 
 .prompt {
-  display: flex; align-items: baseline; gap: 0.6rem;
+  display: flex; align-items: baseline; gap: 0;
   font-size: 14px;
   color: var(--fg);
   margin-top: 1.5rem;
 }
-.prompt__sym { color: var(--amber); }
+.prompt__sym { color: var(--amber); margin-right: 0.55rem; }
+.prompt .cursor { margin-right: 0.4em; }
 .prompt input {
   background: transparent;
   border: 0;
@@ -313,8 +314,10 @@ section {
   min-width: 0;
 }
 .prompt input::placeholder { color: var(--fg-dim); font-style: normal; }
-/* hide the standalone block when the input is focused — native caret takes over */
-.prompt input:focus ~ .cursor { display: none; }
+/* hide the standalone block when the input has focus or has been typed into —
+   native caret takes over so we don't show two cursors at once */
+.prompt:has(input:focus) .cursor,
+.prompt:has(input:not(:placeholder-shown)) .cursor { display: none; }
 .cursor {
   display: inline-block;
   width: 0.55em; height: 1.05em;
