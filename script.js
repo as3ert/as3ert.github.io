@@ -59,21 +59,54 @@
     $date.textContent = d.toISOString().slice(0, 10);
   }
 
-  // ---- gutter scanline: active line tracks scroll position ----
-  const lineSpans = document.querySelectorAll(".linenos span");
-  if (lineSpans.length) {
-    let raf = 0;
-    const updateLine = () => {
-      raf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      const idx = Math.min(lineSpans.length - 1, Math.floor(pct * lineSpans.length));
-      lineSpans.forEach((s, i) => s.classList.toggle("is-active", i === idx));
+  // ---- gutter line numbers: one per [data-line] element ------
+  // Each numbered element gets a span in .linenos, positioned at the
+  // element's vertical y-coord within main. As you scroll, the element
+  // closest to the viewport top is the "active" line.
+  const $linenos = document.querySelector(".linenos");
+  const $main = document.querySelector("main");
+  const dataLineEls = document.querySelectorAll("[data-line]");
+  let lineSpans = [];
+
+  if ($linenos && $main && dataLineEls.length) {
+    $linenos.innerHTML = "";
+    dataLineEls.forEach((el, i) => {
+      const span = document.createElement("span");
+      span.textContent = String(i + 1).padStart(2, "0");
+      $linenos.appendChild(span);
+      lineSpans.push({ el, span });
+    });
+
+    const positionLines = () => {
+      lineSpans.forEach(({ el, span }) => {
+        // offsetTop walks up to the nearest positioned ancestor (main, since
+        // it's position:relative). Add small offset so number sits on the
+        // top edge of the element, not above it.
+        span.style.top = (el.offsetTop + 4) + "px";
+      });
     };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(updateLine); };
+
+    const updateActiveLine = () => {
+      const probe = window.scrollY + window.innerHeight * 0.25;
+      let activeIdx = 0;
+      lineSpans.forEach(({ el }, i) => {
+        if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
+      });
+      lineSpans.forEach(({ span }, i) =>
+        span.classList.toggle("is-active", i === activeIdx)
+      );
+    };
+
+    let raf = 0;
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
+
+    // initial — wait for fonts so layout is final
+    const init = () => { positionLines(); updateActiveLine(); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init);
+    window.addEventListener("load", init);
+    window.addEventListener("resize", () => { positionLines(); updateActiveLine(); });
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    updateLine();
+    init();
   }
 
   // ---- section scroll-spy ------------------------------------
