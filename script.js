@@ -10,45 +10,25 @@
     history.replaceState(null, '', location.pathname + location.search);
   }
 
-  // ---- tab mode: only one section visible at a time ----------
-  const TAB_IDS = ["whoami", "about", "projects", "log", "contact"];
-  const $sections = TAB_IDS.map((id) => document.getElementById(id));
-  const $navLinks = document.querySelectorAll(".sections a");
-
-  const activate = (id) => {
-    if (!TAB_IDS.includes(id)) id = "whoami";
-    $sections.forEach((s) => s && s.classList.toggle("is-active", s.id === id));
-    $navLinks.forEach((a) => a.classList.toggle("is-active", a.dataset.target === id));
-    if (history.replaceState) {
-      history.replaceState(null, "", id === "whoami" ? location.pathname : "#" + id);
-    }
-    window.scrollTo({ top: 0, behavior: "instant" });
-    // line numbers depend on section layout being computed — defer one frame
-    requestAnimationFrame(() => rebuildLineNumbers && rebuildLineNumbers());
-  };
-
-  $navLinks.forEach((a) => {
+  // ---- nav links: smooth-scroll to section, no #hash in URL --
+  document.querySelectorAll(".sections a").forEach((a) => {
     a.addEventListener("click", (e) => {
       e.preventDefault();
-      activate(a.dataset.target);
+      const el = document.getElementById(a.dataset.target);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
-
-  // any in-page anchor (e.g. about → "see projects") swaps tab too
+  // in-page anchors inside content (e.g. about → "See projects →")
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     if (a.closest(".sections")) return;
     a.addEventListener("click", (e) => {
       const id = a.getAttribute("href").slice(1);
-      if (TAB_IDS.includes(id)) {
-        e.preventDefault();
-        activate(id);
-      }
+      const el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
-
-  // initial state — read hash, default to whoami
-  const initialTab = (location.hash || "#whoami").slice(1);
-  activate(initialTab);
 
   // ---- Stuttgart clock (HH:MM:SS) -----------------------------
   const $clock = document.getElementById("clock");
@@ -79,58 +59,48 @@
     $date.textContent = d.toISOString().slice(0, 10);
   }
 
-  // ---- gutter line numbers: rebuilt per active tab -----------
-  // In tab mode, only one section is visible at a time, so we count
-  // the [data-line] items inside the currently-active section and
-  // generate a number for each, positioned at its y-coord.
+  // ---- gutter line numbers: one per [data-line] across page ---
   const $linenos = document.querySelector(".linenos");
-  let lineSpans = [];
+  const dataLineEls = document.querySelectorAll("[data-line]");
+  const lineSpans = [];
 
-  const rebuildLineNumbers = () => {
-    if (!$linenos) return;
-    const active = document.querySelector("section.is-active");
+  if ($linenos && dataLineEls.length) {
     $linenos.innerHTML = "";
-    lineSpans = [];
-    if (!active) return;
-    const items = active.querySelectorAll("[data-line]");
-    items.forEach((el, i) => {
+    dataLineEls.forEach((el, i) => {
       const span = document.createElement("span");
       span.textContent = String(i + 1).padStart(2, "0");
       $linenos.appendChild(span);
       lineSpans.push({ el, span });
     });
-    positionLines();
-    updateActiveLine();
-  };
 
-  const positionLines = () => {
-    lineSpans.forEach(({ el, span }) => {
-      // offsetTop is relative to nearest positioned ancestor (main, since
-      // main is position:relative). Add a small offset so the number sits
-      // on the top edge of the element, not above it.
-      span.style.top = (el.offsetTop + 4) + "px";
-    });
-  };
+    const positionLines = () => {
+      lineSpans.forEach(({ el, span }) => {
+        // offsetTop is relative to main (which is position:relative)
+        span.style.top = (el.offsetTop + 4) + "px";
+      });
+    };
 
-  const updateActiveLine = () => {
-    if (!lineSpans.length) return;
-    const probe = window.scrollY + window.innerHeight * 0.25;
-    let activeIdx = 0;
-    lineSpans.forEach(({ el }, i) => {
-      if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
-    });
-    lineSpans.forEach(({ span }, i) =>
-      span.classList.toggle("is-active", i === activeIdx)
-    );
-  };
+    const updateActiveLine = () => {
+      const probe = window.scrollY + window.innerHeight * 0.25;
+      let activeIdx = 0;
+      lineSpans.forEach(({ el }, i) => {
+        if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
+      });
+      lineSpans.forEach(({ span }, i) =>
+        span.classList.toggle("is-active", i === activeIdx)
+      );
+    };
 
-  let raf = 0;
-  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
+    let raf = 0;
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
 
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuildLineNumbers);
-  window.addEventListener("load", rebuildLineNumbers);
-  window.addEventListener("resize", () => { positionLines(); updateActiveLine(); });
-  window.addEventListener("scroll", onScroll, { passive: true });
+    const init = () => { positionLines(); updateActiveLine(); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init);
+    window.addEventListener("load", init);
+    window.addEventListener("resize", init);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    init();
+  }
 
   // ---- section scroll-spy ------------------------------------
   const links = document.querySelectorAll(".sections a");

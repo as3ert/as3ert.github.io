@@ -213,14 +213,6 @@ main {
 section {
   padding: 5rem 0;
   max-width: var(--col);
-  display: none; /* tab mode — JS toggles .is-active to show one at a time */
-  animation: tabin 0.22s ease-out;
-}
-section.is-active { display: block; }
-section.hero.is-active { display: flex; flex-direction: column; justify-content: center; }
-@keyframes tabin {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 .cmd {
@@ -246,10 +238,10 @@ section.hero.is-active { display: flex; flex-direction: column; justify-content:
    ============================================================ */
 .hero {
   min-height: calc(100vh - 88px);
+  display: flex;
   flex-direction: column;
   justify-content: center;
   padding-top: 0;
-  /* display value comes from section / section.is-active rules above */
 }
 
 .boot {
