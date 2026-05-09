@@ -312,6 +312,8 @@ section { padding: 5rem 0; max-width: var(--col); }
   min-width: 0;
 }
 .prompt input::placeholder { color: var(--fg-dim); font-style: normal; }
+/* hide the standalone block when the input is focused — native caret takes over */
+.prompt input:focus ~ .cursor { display: none; }
 .cursor {
   display: inline-block;
   width: 0.55em; height: 1.05em;
