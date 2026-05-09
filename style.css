@@ -34,7 +34,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  scroll-snap-type: y mandatory;  /* hard-snap: scroll always lands on a section */
+  /* native scroll-snap removed — JS handles snap-on-wheel for smoother feel */
 }
 
 body {
@@ -215,7 +215,6 @@ section {
   min-height: 100vh;          /* one section per screen-height */
   padding: 5rem 0;
   max-width: var(--col);
-  scroll-snap-align: start;   /* snap top of section to top of viewport */
   display: flex;
   flex-direction: column;
   justify-content: center;

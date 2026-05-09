@@ -10,12 +10,55 @@
     history.replaceState(null, '', location.pathname + location.search);
   }
 
-  // ---- nav links: smooth-scroll to section, no #hash in URL --
+  // ---- snap-on-wheel: one scroll input = jump to next section -
+  // (replaces CSS scroll-snap, which lags on most browsers when set
+  // to mandatory because momentum scroll fights the snap)
+  const snapSections = Array.from(document.querySelectorAll("main > section"));
+  let snapBusy = false;
+  let snapTimer = 0;
+
+  const nearestSectionIdx = () => {
+    const probe = window.scrollY + window.innerHeight * 0.35;
+    let best = 0;
+    snapSections.forEach((s, i) => { if (s.offsetTop <= probe) best = i; });
+    return best;
+  };
+
+  const snapTo = (i) => {
+    i = Math.max(0, Math.min(snapSections.length - 1, i));
+    const el = snapSections[i];
+    if (!el || snapBusy) return;
+    snapBusy = true;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => { snapBusy = false; }, 650);
+  };
+
+  // wheel — desktop & trackpad
+  window.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaY) < 6) return;             // ignore jitter
+    if (snapBusy) { e.preventDefault(); return; }
+    e.preventDefault();
+    snapTo(nearestSectionIdx() + (e.deltaY > 0 ? 1 : -1));
+  }, { passive: false });
+
+  // touch — swipe up/down
+  let touchStartY = null;
+  window.addEventListener("touchstart", (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener("touchend", (e) => {
+    if (touchStartY === null || snapBusy) { touchStartY = null; return; }
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    touchStartY = null;
+    if (Math.abs(dy) < 60) return;
+    snapTo(nearestSectionIdx() + (dy > 0 ? 1 : -1));
+  }, { passive: true });
+
+  // nav links — explicit click jumps to the section
   document.querySelectorAll(".sections a").forEach((a) => {
     a.addEventListener("click", (e) => {
       e.preventDefault();
-      const el = document.getElementById(a.dataset.target);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      const idx = snapSections.findIndex((s) => s.id === a.dataset.target);
+      if (idx >= 0) snapTo(idx);
     });
   });
   // in-page anchors inside content (e.g. about → "See projects →")
