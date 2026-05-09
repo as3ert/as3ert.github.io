@@ -323,7 +323,7 @@ section {
 @keyframes blink { 50% { opacity: 0; } }
 
 .term-output {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--fg-mute);
   margin-top: 0.75rem;
   white-space: pre-wrap;
@@ -332,6 +332,41 @@ section {
 .term-output .ok  { color: #74c476; }
 .term-output .err { color: var(--rust); }
 .term-output b { color: var(--fg); font-weight: 500; }
+.term-output .term-head { color: var(--fg); }
+.term-output .term-rule { color: var(--fg-dim); }
+.term-output .term-body { color: var(--fg); }
+.term-output .md-h {
+  display: inline-block;
+  color: var(--amber);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+}
+.term-output .md-h2 {
+  display: inline-block;
+  color: var(--bone);
+  font-weight: 600;
+}
+.term-output .md-code {
+  font-family: inherit;
+  background: var(--bg-rule);
+  color: var(--amber-hot);
+  padding: 0 5px;
+  border-radius: 2px;
+  font-size: 0.95em;
+}
+.term-output a {
+  color: var(--amber);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--fg-dim);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s, color 0.15s;
+}
+.term-output a:hover {
+  text-decoration-color: var(--amber);
+  color: var(--amber-hot);
+}
 
 /* ============================================================
    about

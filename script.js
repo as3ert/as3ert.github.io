@@ -183,14 +183,46 @@
   };
 
   const print = (html) => { $out.innerHTML = html; };
+
+  // tiny markdown → html renderer (just enough to make cat output feel
+  // alive: # headings, `code`, **bold**, [text](url), auto-link email/url)
+  const renderMd = (text) => {
+    let s = escapeHtml(text);
+    // # heading at start of line
+    s = s.replace(/^# (.+)$/gm, '<span class="md-h">$1</span>');
+    // ## subheading
+    s = s.replace(/^## (.+)$/gm, '<span class="md-h2">$1</span>');
+    // markdown links [text](url) — process before raw URL auto-link
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    // inline `code`
+    s = s.replace(/`([^`\n]+)`/g, '<code class="md-code">$1</code>');
+    // **bold**
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
+    // auto-link emails (avoid double-wrapping)
+    s = s.replace(/(^|[\s>(])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
+      '$1<a href="mailto:$2">$2</a>');
+    // auto-link bare https?:// urls
+    s = s.replace(/(^|[\s>(])((?:https?:\/\/)[^\s<)]+)/g,
+      '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    // auto-link bare github.com/... refs
+    s = s.replace(/(^|[\s>(])(github\.com\/[a-zA-Z0-9._\/-]+)/g,
+      '$1<a href="https://$2" target="_blank" rel="noopener">$2</a>');
+    return s;
+  };
+
   const printFile = async (label, url, fallback) => {
-    print(`<span style="color:var(--fg-dim)">$ ${escapeHtml(label)}</span>\n<span style="color:var(--fg-dim)">─── reading ${escapeHtml(url)} ───</span>`);
+    print(`<span class="term-head">$ ${escapeHtml(label)}</span>\n<span class="term-rule">─── reading ${escapeHtml(url)} ───</span>`);
     const t = await fetchText(url);
     if (t === null) {
       print(fallback || `<span class="err">i/o error:</span> ${escapeHtml(url)}`);
       return;
     }
-    print(`<span style="color:var(--fg-dim)">$ ${escapeHtml(label)}</span>\n<span style="color:var(--fg-dim)">─── ${escapeHtml(url)} ───</span>\n${escapeHtml(t)}`);
+    print(
+      `<span class="term-head">$ ${escapeHtml(label)}</span>\n` +
+      `<span class="term-rule">─── ${escapeHtml(url)} ───</span>\n` +
+      `<span class="term-body">${renderMd(t)}</span>`
+    );
   };
 
   if ($form && $in && $out) {
