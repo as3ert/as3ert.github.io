@@ -32,9 +32,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  /* native scroll-snap removed — JS handles snap-on-wheel for smoother feel */
+  /* scroll-behavior + scroll-snap removed — JS owns scroll animation */
 }
 
 body {

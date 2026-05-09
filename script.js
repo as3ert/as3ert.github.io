@@ -11,12 +11,11 @@
   }
 
   // ---- snap-on-wheel: one scroll input = jump to next section -
-  // (custom animator — never lets the browser do native scroll, so
-  // there's no "scroll-a-few-pixels-then-jump" stutter)
+  // Browser never gets to scroll natively (preventDefault on every wheel).
+  // Our own RAF animator runs the jump in 220ms; snapBusy debounce
+  // collapses a multi-event trackpad gesture into a single jump.
   const snapSections = Array.from(document.querySelectorAll("main > section"));
   let snapBusy = false;
-  let wheelAcc = 0;
-  let wheelResetTimer = 0;
 
   const nearestSectionIdx = () => {
     const probe = window.scrollY + window.innerHeight * 0.35;
@@ -25,8 +24,7 @@
     return best;
   };
 
-  // custom RAF-based animation — full control, no fighting with CSS smooth
-  const animateScrollTo = (targetY, duration = 320) => {
+  const animateScrollTo = (targetY, duration = 220) => {
     const startY = window.scrollY;
     const distance = targetY - startY;
     if (Math.abs(distance) < 1) return;
@@ -45,23 +43,14 @@
     const el = snapSections[i];
     if (!el) return;
     snapBusy = true;
-    animateScrollTo(el.offsetTop, 320);
-    setTimeout(() => { snapBusy = false; }, 360);
+    animateScrollTo(el.offsetTop, 220);
+    setTimeout(() => { snapBusy = false; }, 260);
   };
 
-  // wheel — ALWAYS preventDefault so the browser never does its own scroll;
-  // accumulate so trackpad jitter doesn't fire 5 jumps from one swipe
   window.addEventListener("wheel", (e) => {
     e.preventDefault();
-    if (snapBusy) return;
-    wheelAcc += e.deltaY;
-    clearTimeout(wheelResetTimer);
-    wheelResetTimer = setTimeout(() => { wheelAcc = 0; }, 180);
-    if (Math.abs(wheelAcc) >= 30) {
-      const dir = wheelAcc > 0 ? 1 : -1;
-      wheelAcc = 0;
-      snapTo(nearestSectionIdx() + dir);
-    }
+    if (snapBusy || Math.abs(e.deltaY) < 1) return;
+    snapTo(nearestSectionIdx() + (e.deltaY > 0 ? 1 : -1));
   }, { passive: false });
 
   // touch — swipe up/down
