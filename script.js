@@ -49,22 +49,17 @@
     setTimeout(() => { snapBusy = false; }, 420);
   };
 
-  window.addEventListener("wheel", (e) => {
-    e.preventDefault();
-    if (snapBusy || Math.abs(e.deltaY) < 1) return;
-    snapTo(nearestSectionIdx() + (e.deltaY > 0 ? 1 : -1));
-  }, { passive: false });
-
-  // touch — swipe up/down
-  let touchStartY = null;
-  window.addEventListener("touchstart", (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener("touchend", (e) => {
-    if (touchStartY === null || snapBusy) { touchStartY = null; return; }
-    const dy = touchStartY - e.changedTouches[0].clientY;
-    touchStartY = null;
-    if (Math.abs(dy) < 60) return;
-    snapTo(nearestSectionIdx() + (dy > 0 ? 1 : -1));
-  }, { passive: true });
+  // Only attach the wheel-snap on devices with a real pointer (mouse/trackpad).
+  // Touch-only devices keep native iOS/Android momentum scroll + CSS snap
+  // (set in style.css via @media (pointer: coarse)).
+  const hasFinePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (hasFinePointer) {
+    window.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      if (snapBusy || Math.abs(e.deltaY) < 1) return;
+      snapTo(nearestSectionIdx() + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: false });
+  }
 
   // nav links — explicit click jumps to the section
   document.querySelectorAll(".sections a").forEach((a) => {

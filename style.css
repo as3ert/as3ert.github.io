@@ -33,7 +33,16 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  /* scroll-behavior + scroll-snap removed — JS owns scroll animation */
+  /* desktop: JS owns scroll animation. touch devices: CSS snap below */
+}
+/* touch devices (iPhone, iPad, etc.) use native scroll + CSS snap;
+   the JS wheel handler is desktop-only */
+@media (hover: none), (pointer: coarse) {
+  html {
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+  }
+  section { scroll-snap-align: start; }
 }
 
 body {
