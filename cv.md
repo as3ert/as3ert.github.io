@@ -17,11 +17,10 @@ Web version: https://resume.guangxinzhao.com
 ## EXPERIENCE
 ─────────────────────────────────────────────
 2025 – present   HiWi · VISUS, Universität Stuttgart
-                 Schmalstieg / Reina · Amulet project
-                 MPEG video streaming on NVIDIA Falcor
+                 Amulet project · MPEG video streaming on NVIDIA Falcor
 
 2025 – present   Research project · 2D Gaussian Splatting
-                 Mori · forward-facing narrow-baseline rendering
+                 Forward-facing narrow-baseline rendering
 
 ## SKILLS
 ─────────────────────────────────────────────

@@ -19,8 +19,7 @@ drwxr-xr-x  moebius-npr-renderer/     Mœbius-Style Non-Photorealistic Renderer
                                       tags: opengl, glsl, npr, real-time, c++
 
 drwxr-xr-x  amulet-streaming/         MPEG Video Streaming on NVIDIA Falcor
-                                      HiWi @ VISUS — Universität Stuttgart
-                                      (Schmalstieg / Reina), 2025–
+                                      HiWi @ VISUS — Universität Stuttgart, 2025–
 
                                       Implementing the streaming pipeline for
                                       the Amulet project: NVENC encode,
@@ -30,8 +29,7 @@ drwxr-xr-x  amulet-streaming/         MPEG Video Streaming on NVIDIA Falcor
 
 drwxr-xr-x  2dgs-forward-facing/      2D Gaussian Splatting for Forward-Facing
                                       Multi-View Rendering
-                                      Research project — Universität Stuttgart
-                                      (Mori), 2025–
+                                      Research project — Universität Stuttgart, 2025–
 
                                       Stabilizing 2DGS training under narrow-
                                       baseline forward-facing setups by combining
