@@ -266,7 +266,17 @@ section { padding: 5rem 0; max-width: var(--col); }
   text-transform: uppercase;
   margin-bottom: 2rem;
 }
-.hero__role .sep { color: var(--amber); margin: 0 0.5rem; }
+.hero__role .sep { color: var(--fg-dim); margin: 0 0.55rem; }
+.hero__role .acc { color: var(--amber); }
+
+.hero__name .caret {
+  width: 0.45em;
+  height: 0.85em;
+  margin-left: 0.18em;
+  vertical-align: -0.05em;
+  background: var(--amber);
+  box-shadow: 0 0 18px rgba(255, 170, 0, 0.45);
+}
 
 .prompt {
   display: flex; align-items: baseline; gap: 0.6rem;

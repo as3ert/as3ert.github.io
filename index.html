@@ -48,17 +48,17 @@
 
     <!-- ====================================================== -->
     <section id="whoami" class="hero">
-      <pre class="boot" aria-hidden="true"><div><span class="dim">&gt;</span> booting <span class="warn">guangxinzhao.com</span> [v.4]</div><div><span class="dim">&gt;</span> mounting <span class="warn">/home/guangxin</span> ............ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> resolving identity ........................ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> last login: from <span class="warn">stuttgart, de</span></div><div>&nbsp;</div></pre>
+      <pre class="boot" aria-hidden="true"><div><span class="dim">&gt;</span> last login: today &middot; <span class="warn">stuttgart, de</span></div><div><span class="dim">&gt;</span> mounting <span class="warn">/home/guangxin</span> ............ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> spawning shell ..................... <span class="ok">ok</span></div><div>&nbsp;</div></pre>
 
       <h1 class="hero__name">
-        <span class="lo">$</span> guangxin&nbsp;zhao<span class="lo">.tar.gz</span>
+        guangxin&nbsp;zhao<span class="cursor caret" aria-hidden="true"></span>
       </h1>
       <p class="hero__role">
-        msc visual computing
-        <span class="sep">/</span>
-        university of stuttgart
-        <span class="sep">/</span>
-        @as3ert
+        <span class="acc">@as3ert</span>
+        <span class="sep">·</span>
+        visual computing, m.sc.
+        <span class="sep">·</span>
+        stuttgart
       </p>
 
       <form class="prompt" id="prompt-form" autocomplete="off" spellcheck="false">
@@ -76,16 +76,16 @@
 
       <div class="about">
         <div class="about__prose">
-          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> in most of the places that ask for a username. Master's student in Visual Computing at the University of Stuttgart.</p>
-          <p>I like the seam between bits and matter: hand-routed keyboard PCBs, 3D-printed mistakes, real-time renderers, and a Raspberry Pi running more services than it has any business running. If you want a tour, point yourself at the <a href="#projects">projects</a> below.</p>
-          <p>Off the clock, I'm probably re-installing Arch, reading a SIGGRAPH paper I don't fully understand yet, or fighting CMake.</p>
+          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. Master's student in Visual Computing at the University of Stuttgart.</p>
+          <p>I work where hardware meets pixels: keyboard PCBs, 3D-printed parts, small renderers, a Raspberry Pi running more services than it should. <a href="#projects">A few of those</a> are below.</p>
+          <p>When I'm not on those, I'm probably reading graphics papers or arguing with CMake.</p>
         </div>
 
         <pre class="neofetch" aria-label="neofetch-style summary"><span class="k">os</span>........... <span class="v acc">stuttgart, de</span>
 <span class="k">role</span>......... <span class="v">visual computing · m.sc</span>
 <span class="k">shell</span>........ <span class="v">zsh + tmux</span>
 <span class="k">editor</span>....... <span class="v">nvim</span>
-<span class="k">distro</span>....... <span class="v">arch</span> <span class="k">(btw)</span>
+<span class="k">distro</span>....... <span class="v">arch linux</span>
 <span class="k">wm</span>........... <span class="v">hyprland</span>
 <span class="k">keyboard</span>..... <span class="v">hand-rolled · 60%</span>
 <span class="k">cwd</span>.......... <span class="v">~/projects</span>
@@ -104,7 +104,7 @@
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
             <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">as3ert-pcb<span class="ext">/</span></a></div>
-            <div class="proj__desc">Custom 60% mechanical keyboard. KiCad layout, RTIC firmware in Rust, designed late at night with too much coffee.</div>
+            <div class="proj__desc">Custom 60% mechanical keyboard — KiCad schematic + layout, firmware in Rust.</div>
             <div class="proj__tags"><span>kicad</span><span>embedded-rust</span><span>hardware</span></div>
           </div>
           <div class="proj__arrow">→</div>
@@ -124,7 +124,7 @@
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
             <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">visual-computing<span class="ext">/</span></a></div>
-            <div class="proj__desc">Coursework, scratch renderers, GLSL shaders, real-time experiments. Some of it shipped, some of it crashed in a way that was actually instructive.</div>
+            <div class="proj__desc">Coursework, scratch renderers, GLSL shaders, and real-time experiments from the M.Sc.</div>
             <div class="proj__tags"><span>opengl</span><span>c++</span><span>glsl</span><span>graphics</span></div>
           </div>
           <div class="proj__arrow">→</div>
@@ -134,7 +134,7 @@
           <div class="proj__perms">drwxr-xr-x</div>
           <div class="proj__main">
             <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">3d-prints<span class="ext">/</span></a></div>
-            <div class="proj__desc">Assorted 3D-printed parts — keyboard cases, monitor brackets, a Pi enclosure with passive airflow that mostly works.</div>
+            <div class="proj__desc">Assorted 3D-printed parts — keyboard cases, monitor brackets, custom Pi enclosures.</div>
             <div class="proj__tags"><span>fusion-360</span><span>prusa</span><span>cad</span></div>
           </div>
           <div class="proj__arrow">→</div>
@@ -144,7 +144,7 @@
           <div class="proj__perms">-rw-r--r--</div>
           <div class="proj__main">
             <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">dotfiles<span class="ext">.git</span></a></div>
-            <div class="proj__desc">Arch · Hyprland · Neovim · Zsh. The usual setup-shaped problem, in public.</div>
+            <div class="proj__desc">Arch · Hyprland · Neovim · Zsh — my daily driver setup, kept in version control.</div>
             <div class="proj__tags"><span>config</span><span>hyprland</span><span>neovim</span></div>
           </div>
           <div class="proj__arrow">→</div>
@@ -161,31 +161,24 @@
       <div class="log">
 
         <div class="log__entry">
-          <div class="log__hash">aa3eb1c · HEAD → main</div>
-          <div class="log__meta">Stuttgart, DE · ongoing</div>
+          <div class="log__hash">HEAD → main</div>
+          <div class="log__meta">Stuttgart, DE · 2024–present</div>
           <div class="log__msg">M.Sc. Visual Computing — University of Stuttgart</div>
-          <div class="log__sub">graphics, vision, simulation, the occasional all-nighter</div>
+          <div class="log__sub">graphics, vision, simulation</div>
         </div>
 
         <div class="log__entry">
-          <div class="log__hash">fed90a4</div>
-          <div class="log__meta">2024 · transition</div>
-          <div class="log__msg">moved to Stuttgart for grad school</div>
-          <div class="log__sub">discovered the Maultaschen, never went back</div>
-        </div>
-
-        <div class="log__entry">
-          <div class="log__hash">b00c123</div>
+          <div class="log__hash">prev</div>
           <div class="log__meta">undergrad · Computer Science</div>
-          <div class="log__msg">B.Sc. — built first keyboard, broke first oscilloscope</div>
-          <div class="log__sub">started signing emails as `as3ert`, never explained why</div>
+          <div class="log__msg">B.Sc. Computer Science</div>
+          <div class="log__sub">first keyboard, first soldering iron, first segfault</div>
         </div>
 
         <div class="log__entry">
-          <div class="log__hash">1b13a90 · init</div>
-          <div class="log__meta">earlier · root commit</div>
-          <div class="log__msg">born; immediately started taking things apart</div>
-          <div class="log__sub">no documentation. shipped anyway.</div>
+          <div class="log__hash">init</div>
+          <div class="log__meta">root commit</div>
+          <div class="log__msg">started taking things apart to see how they worked</div>
+          <div class="log__sub">never really stopped</div>
         </div>
 
       </div>
@@ -197,7 +190,7 @@
       <div class="rule">─────────────────────────────────────────────────────────────────────</div>
 
       <div class="contact">
-        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">if you want to talk shop, ship a postcard, or send a paper that changed how you think — fastest path is email.</p>
+        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">fastest way to reach me is by email — happy to talk graphics, hardware, or anything else.</p>
 
         <ul>
           <li>
