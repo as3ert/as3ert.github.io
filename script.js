@@ -258,12 +258,113 @@
     );
   };
 
+  // ---- tab completion + arrow-key history -------------------
+  const COMMANDS = [
+    "about", "cat", "cd", "clear", "coffee", "contact", "cv", "date",
+    "emacs", "exit", "help", "logout", "ls", "pwd", "sudo", "uname",
+    "uptime", "vim", "whoami",
+  ];
+  const FILES = [
+    "about", "about.md", ".about",
+    "contact", "contact.md", ".contact",
+    "projects", "projects.md",
+    "cv", "cv.md",
+    "whoami.txt", "uname.txt",
+  ];
+  const cmdHistory = [];
+  let histIdx = 0;
+  const longestCommonPrefix = (arr) => {
+    if (!arr.length) return "";
+    let p = arr[0];
+    for (const s of arr) {
+      while (s.toLowerCase().indexOf(p.toLowerCase()) !== 0) {
+        p = p.slice(0, -1);
+        if (!p) return "";
+      }
+    }
+    return p;
+  };
+
+  if ($in) {
+    $in.addEventListener("keydown", (e) => {
+      // Tab — autocomplete
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const val = $in.value;
+        let pool, prefix, build;
+        if (val.startsWith("cat ")) {
+          prefix = val.slice(4);
+          pool = FILES;
+          build = (s) => "cat " + s;
+        } else {
+          prefix = val;
+          pool = COMMANDS;
+          build = (s) => s + (s === "cat" ? " " : "");
+        }
+        const matches = pool.filter((c) =>
+          c.toLowerCase().startsWith(prefix.toLowerCase())
+        );
+        if (matches.length === 1) {
+          $in.value = build(matches[0]);
+        } else if (matches.length > 1) {
+          const lcp = longestCommonPrefix(matches);
+          if (lcp.length > prefix.length) {
+            $in.value = build(lcp);
+          } else {
+            // print options under prompt
+            const items = matches
+              .map((m) => `<span style="color:var(--fg)">${escapeHtml(m)}</span>`)
+              .join("  ");
+            print(items);
+          }
+        } else if (val === "") {
+          // empty + tab → show all commands
+          const items = COMMANDS
+            .map((m) => `<span style="color:var(--fg)">${escapeHtml(m)}</span>`)
+            .join("  ");
+          print(items);
+        }
+        return;
+      }
+
+      // ArrowUp / ArrowDown — history navigation
+      if (e.key === "ArrowUp") {
+        if (!cmdHistory.length) return;
+        e.preventDefault();
+        histIdx = Math.max(0, histIdx - 1);
+        $in.value = cmdHistory[histIdx] || "";
+        // place cursor at end
+        requestAnimationFrame(() => {
+          $in.setSelectionRange($in.value.length, $in.value.length);
+        });
+        return;
+      }
+      if (e.key === "ArrowDown") {
+        if (!cmdHistory.length) return;
+        e.preventDefault();
+        if (histIdx < cmdHistory.length - 1) {
+          histIdx += 1;
+          $in.value = cmdHistory[histIdx];
+        } else {
+          histIdx = cmdHistory.length;
+          $in.value = "";
+        }
+        requestAnimationFrame(() => {
+          $in.setSelectionRange($in.value.length, $in.value.length);
+        });
+      }
+    });
+  }
+
   if ($form && $in && $out) {
     $form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const raw = $in.value.trim();
       $in.value = "";
       if (!raw) return;
+      // record in history (skip exact dupe of last entry)
+      if (cmdHistory[cmdHistory.length - 1] !== raw) cmdHistory.push(raw);
+      histIdx = cmdHistory.length;
       const cmd = raw.toLowerCase();
 
       // cat <file> — fetches a real file from the server
@@ -304,7 +405,7 @@ drwx------  .secrets/
       // synchronous fixed responses
       const fixed = {
         help:
-          `commands: <b>cat</b> &lt;file&gt;, <b>ls</b>, <b>whoami</b>, <b>uname</b>, <b>contact</b>, <b>cv</b>, <b>about</b>, <b>clear</b>, <b>exit</b>\n<span style="color:var(--fg-mute)">try: <b>cat about</b> &nbsp; or open <a href="/about.md" target="_blank" style="color:var(--amber)">/about.md</a> directly.</span>`,
+          `commands: <b>cat</b> &lt;file&gt;, <b>ls</b>, <b>whoami</b>, <b>uname</b>, <b>contact</b>, <b>cv</b>, <b>about</b>, <b>clear</b>, <b>exit</b>\n<span style="color:var(--fg-mute)">tip: <b>Tab</b> autocompletes, <b>↑</b>/<b>↓</b> walks history. or curl <a href="/about.md" target="_blank" style="color:var(--amber)">/about.md</a> directly.</span>`,
         sudo:
           `<span class="err">[sudo] password for guangxin:</span> <span style="color:var(--fg-mute)">(nice try)</span>`,
         "rm -rf /":
