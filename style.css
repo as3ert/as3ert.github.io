@@ -308,9 +308,10 @@ section { padding: 5rem 0; max-width: var(--col); }
   color: var(--fg);
   font: inherit;
   flex: 1;
-  caret-color: transparent;
+  caret-color: var(--amber);
   min-width: 0;
 }
+.prompt input::placeholder { color: var(--fg-dim); font-style: normal; }
 .cursor {
   display: inline-block;
   width: 0.55em; height: 1.05em;

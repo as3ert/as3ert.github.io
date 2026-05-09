@@ -3,9 +3,9 @@
 /* ========================================================== */
 
 (() => {
-  // ---- don't let browsers fight us on scroll position ---------
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  // strip any leftover #anchor from the URL so refresh doesn't teleport
+  // ---- keep browser's default scroll-restore on refresh -------
+  // strip any leftover #anchor from the URL (so refresh doesn't teleport
+  // to a section the user clicked earlier)
   if (location.hash) {
     history.replaceState(null, '', location.pathname + location.search);
   }
