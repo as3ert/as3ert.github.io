@@ -3,6 +3,33 @@
 /* ========================================================== */
 
 (() => {
+  // ---- don't let browsers fight us on scroll position ---------
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // strip any leftover #anchor from the URL so refresh doesn't teleport
+  if (location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  // ---- nav links: scroll without polluting the URL ------------
+  document.querySelectorAll('.sections a').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const el = document.getElementById(a.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  // also for in-page anchors inside content (e.g. about → projects)
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    if (a.closest('.sections')) return;
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').slice(1);
+      const el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
   // ---- Stuttgart clock (HH:MM:SS) -----------------------------
   const $clock = document.getElementById("clock");
   const tickClock = () => {

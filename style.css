@@ -113,15 +113,31 @@ body::after {
   z-index: 50;
   backdrop-filter: blur(6px);
 }
-.titlebar__lights { display: inline-flex; gap: 6px; }
-.titlebar__lights span {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--bg-rule);
-  border: 1px solid var(--fg-dim);
+.titlebar__tty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--fg-dim);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-right: 0.5rem;
+  border-right: 1px solid var(--bg-rule);
 }
-.titlebar__lights span:nth-child(1) { background: #5b1f1f; border-color: #8a3030; }
-.titlebar__lights span:nth-child(2) { background: #5b4a1f; border-color: #8a7530; }
-.titlebar__lights span:nth-child(3) { background: #1f5b2c; border-color: #308a44; }
+.titlebar__tty::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px rgba(255, 170, 0, 0.7);
+  animation: ttyblink 2.6s steps(1) infinite;
+}
+@keyframes ttyblink {
+  0%, 92% { opacity: 1; }
+  94%, 96% { opacity: 0.35; }
+  98%, 100% { opacity: 1; }
+}
 .titlebar__path { color: var(--fg); }
 .titlebar__path .at { color: var(--amber); }
 .titlebar__clock {
