@@ -1,0 +1,1 @@
+Linux guangxinzhao.com 6.13.0-amber-crt #1 SMP x86_64 GNU/Caffeine

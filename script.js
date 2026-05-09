@@ -143,83 +143,147 @@
   });
 
   // ---- terminal prompt: tiny shell ---------------------------
+  // 'cat', 'whoami', 'uname' actually fetch real files at the
+  // root — try `curl https://guangxinzhao.com/about.md` from a real
+  // terminal, the page is just one of many readers.
   const $form = document.getElementById("prompt-form");
   const $in = document.getElementById("prompt-input");
   const $out = document.getElementById("term-output");
+
+  // file resolver: maps shell-y filenames to real URLs
+  const fileMap = {
+    "about":      "/about.md",
+    "about.md":   "/about.md",
+    ".about":     "/about.md",
+    "~/.about":   "/about.md",
+    "contact":    "/contact.md",
+    "contact.md": "/contact.md",
+    ".contact":   "/contact.md",
+    "~/.contact": "/contact.md",
+    "projects":   "/projects.md",
+    "projects.md":"/projects.md",
+    "cv":         "/cv.md",
+    "cv.md":      "/cv.md",
+    "cv.pdf":     "/cv.md",
+    "whoami":     "/whoami.txt",
+    "uname":      "/uname.txt",
+    "uname.txt":  "/uname.txt",
+  };
+
+  const cache = new Map();
+  const fetchText = async (url) => {
+    if (cache.has(url)) return cache.get(url);
+    try {
+      const r = await fetch(url, { cache: "no-cache" });
+      if (!r.ok) return null;
+      const t = await r.text();
+      cache.set(url, t);
+      return t;
+    } catch (_) { return null; }
+  };
+
+  const print = (html) => { $out.innerHTML = html; };
+  const printFile = async (label, url, fallback) => {
+    print(`<span style="color:var(--fg-dim)">$ ${escapeHtml(label)}</span>\n<span style="color:var(--fg-dim)">─── reading ${escapeHtml(url)} ───</span>`);
+    const t = await fetchText(url);
+    if (t === null) {
+      print(fallback || `<span class="err">i/o error:</span> ${escapeHtml(url)}`);
+      return;
+    }
+    print(`<span style="color:var(--fg-dim)">$ ${escapeHtml(label)}</span>\n<span style="color:var(--fg-dim)">─── ${escapeHtml(url)} ───</span>\n${escapeHtml(t)}`);
+  };
+
   if ($form && $in && $out) {
-    const print = (html) => {
-      $out.innerHTML = html;
-    };
-
-    const cmds = {
-      help: () =>
-        `available: <b>whoami</b>, <b>ls</b>, <b>cat</b> <span style="color:var(--fg-mute)">[file]</span>, <b>contact</b>, <b>cv</b>, <b>sudo</b>, <b>clear</b>, <b>exit</b>`,
-      whoami: () =>
-        `<b>guangxin</b> · stuttgart, de · uid=1000(as3ert) gid=1000(as3ert) groups=hardware,graphics,coffee`,
-      ls: () =>
-        `about.md  projects/  contact  cv.pdf  .ssh/  .secrets/`,
-      "ls -la": () =>
-        `drwx------  .ssh\ndrwx------  .secrets\n-rw-r--r--  about.md\ndrwxr-xr-x  projects\n-rw-r--r--  contact\n-rw-r--r--  cv.pdf`,
-      "cat about.md": () => {
-        document.getElementById("about").scrollIntoView({ behavior: "smooth" });
-        return `<span class="ok">→</span> see <b>~/.about</b> below.`;
-      },
-      "cat contact": () => {
-        document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
-        return `<span class="ok">→</span> see <b>~/.contact</b> below.`;
-      },
-      contact: () =>
-        `email: <a href="mailto:as3ertpro@gmail.com" style="color:var(--amber)">as3ertpro@gmail.com</a> · git: <a href="https://github.com/as3ert" target="_blank" rel="noopener" style="color:var(--amber)">github.com/as3ert</a>`,
-      cv: () =>
-        `cv: <span class="err">file not found</span>. drop a line, i'll send one.`,
-      sudo: () =>
-        `<span class="err">[sudo] password for guangxin:</span> <span style="color:var(--fg-mute)">(nice try)</span>`,
-      "rm -rf /": () =>
-        `<span class="err">refused.</span> not on this domain.`,
-      vim: () =>
-        `:q! <span style="color:var(--fg-mute)">— exited successfully</span>`,
-      emacs: () =>
-        `<span class="err">heresy detected.</span> see <b>vim</b>.`,
-      coffee: () =>
-        `☕ brewing… <span style="color:var(--fg-mute)">(this is a no-op but the thought counts)</span>`,
-      uname: () => `Linux guangxinzhao.com 6.13.0-amber-crt #1 SMP <span style="color:var(--fg-mute)">x86_64 GNU/Caffeine</span>`,
-      uptime: () => `up <b>∞</b> days, load avg: 0.42, 1.13, 0.99`,
-      date: () => new Date().toString(),
-      pwd: () => `/home/guangxin`,
-      exit: () => {
-        $out.innerHTML = `logout.<br><span style="color:var(--fg-mute)">connection to guangxinzhao.com closed.</span>`;
-        $in.disabled = true;
-        return null;
-      },
-      clear: () => {
-        $out.innerHTML = "";
-        $in.value = "";
-        return null;
-      },
-    };
-
-    $form.addEventListener("submit", (e) => {
+    $form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const raw = $in.value.trim();
+      $in.value = "";
       if (!raw) return;
       const cmd = raw.toLowerCase();
-      const fn =
-        cmds[cmd] ||
-        Object.entries(cmds).find(([k]) => k === cmd || k.startsWith(cmd + " "))?.[1];
 
-      if (fn) {
-        const r = fn();
-        if (r !== null) print(r);
-      } else if (cmd.startsWith("cat ")) {
-        print(`cat: <b>${escapeHtml(raw.slice(4))}</b>: <span class="err">no such file</span>`);
-      } else if (cmd.startsWith("cd ")) {
-        print(`<span style="color:var(--fg-mute)">(this is a single page; you are already home.)</span>`);
-      } else {
-        print(
-          `<span class="err">command not found:</span> ${escapeHtml(raw)} <span style="color:var(--fg-mute)">— try <b>help</b></span>`
-        );
+      // cat <file> — fetches a real file from the server
+      if (cmd.startsWith("cat ")) {
+        const arg = raw.slice(4).trim();
+        const url = fileMap[arg.toLowerCase()];
+        if (!url) {
+          print(`cat: <b>${escapeHtml(arg)}</b>: <span class="err">no such file</span>`);
+          return;
+        }
+        await printFile(`cat ${arg}`, url);
+        return;
       }
-      $in.value = "";
+
+      // ls / ls -la — listing reflects what's actually fetchable
+      if (cmd === "ls") { print(`about.md  contact.md  projects.md  cv.md  whoami.txt  uname.txt`); return; }
+      if (cmd === "ls -la" || cmd === "ls -a") {
+        print(
+`drwx------  .ssh/
+drwx------  .secrets/
+-rw-r--r--  about.md
+-rw-r--r--  contact.md
+-rw-r--r--  projects.md
+-rw-r--r--  cv.md
+-rw-r--r--  whoami.txt
+-rw-r--r--  uname.txt`
+        );
+        return;
+      }
+
+      // these all fetch real files
+      if (cmd === "whoami")              { await printFile("whoami", "/whoami.txt"); return; }
+      if (cmd === "uname" || cmd === "uname -a") { await printFile("uname -a", "/uname.txt"); return; }
+      if (cmd === "contact")             { await printFile("cat ~/.contact", "/contact.md"); return; }
+      if (cmd === "cv")                  { await printFile("cat ~/cv.md", "/cv.md"); return; }
+      if (cmd === "about")               { await printFile("cat ~/.about", "/about.md"); return; }
+
+      // synchronous fixed responses
+      const fixed = {
+        help:
+          `commands: <b>cat</b> &lt;file&gt;, <b>ls</b>, <b>whoami</b>, <b>uname</b>, <b>contact</b>, <b>cv</b>, <b>about</b>, <b>clear</b>, <b>exit</b>\n<span style="color:var(--fg-mute)">try: <b>cat about</b> &nbsp; or open <a href="/about.md" target="_blank" style="color:var(--amber)">/about.md</a> directly.</span>`,
+        sudo:
+          `<span class="err">[sudo] password for guangxin:</span> <span style="color:var(--fg-mute)">(nice try)</span>`,
+        "rm -rf /":
+          `<span class="err">refused.</span> not on this domain.`,
+        "rm -rf /*":
+          `<span class="err">refused.</span> not on this domain.`,
+        vim:
+          `:q! <span style="color:var(--fg-mute)">— exited successfully</span>`,
+        emacs:
+          `<span class="err">heresy detected.</span> see <b>vim</b>.`,
+        coffee:
+          `☕ brewing… <span style="color:var(--fg-mute)">(no-op, the thought counts)</span>`,
+        uptime:
+          `up <b>∞</b> days, load avg: 0.42, 1.13, 0.99`,
+        date:
+          escapeHtml(new Date().toString()),
+        pwd:
+          `/home/guangxin`,
+        exit:
+          null,
+        logout:
+          null,
+        clear:
+          "",
+      };
+
+      if (cmd in fixed) {
+        if (cmd === "exit" || cmd === "logout") {
+          $out.innerHTML = `logout.<br><span style="color:var(--fg-mute)">connection to guangxinzhao.com closed.</span>`;
+          $in.disabled = true;
+        } else if (cmd === "clear") {
+          $out.innerHTML = "";
+        } else {
+          print(fixed[cmd]);
+        }
+        return;
+      }
+
+      if (cmd.startsWith("cd ")) {
+        print(`<span style="color:var(--fg-mute)">(this is a single page; you are already home.)</span>`);
+        return;
+      }
+
+      print(`<span class="err">command not found:</span> ${escapeHtml(raw)} <span style="color:var(--fg-mute)">— try <b>help</b></span>`);
     });
   }
 
