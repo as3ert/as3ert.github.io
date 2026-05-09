@@ -138,6 +138,25 @@ body::before {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
   color: var(--fg);
+  white-space: nowrap;
+}
+
+/* mobile titlebar: shrink + truncate the user@host path */
+@media (max-width: 640px) {
+  .titlebar {
+    font-size: 11px;
+    gap: 0.5rem;
+    padding: 0 0.9rem;
+  }
+  .titlebar__tty { font-size: 10px; padding-right: 0.5rem; }
+  .titlebar__tty::before { width: 5px; height: 5px; }
+  .titlebar__path {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1; min-width: 0;
+  }
+  .titlebar__clock { font-size: 10px; }
 }
 .titlebar__clock::before {
   content: '◉ ';
@@ -599,6 +618,15 @@ footer {
   border-top: 1px solid var(--bg-rule);
   display: flex; flex-wrap: wrap; gap: 1rem 2rem;
   background: var(--bg-soft);
+}
+@media (max-width: 640px) {
+  footer {
+    padding: 1.5rem 1rem 2rem;
+    font-size: 10px;
+    gap: 0.4rem 0.9rem;
+  }
+  footer .right { display: none; }   /* j/k hints irrelevant on touch */
+  footer .sep { display: none; }
 }
 footer .sep { color: var(--bg-rule); }
 footer code {
