@@ -59,6 +59,23 @@
     $date.textContent = d.toISOString().slice(0, 10);
   }
 
+  // ---- gutter scanline: active line tracks scroll position ----
+  const lineSpans = document.querySelectorAll(".linenos span");
+  if (lineSpans.length) {
+    let raf = 0;
+    const updateLine = () => {
+      raf = 0;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      const idx = Math.min(lineSpans.length - 1, Math.floor(pct * lineSpans.length));
+      lineSpans.forEach((s, i) => s.classList.toggle("is-active", i === idx));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(updateLine); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    updateLine();
+  }
+
   // ---- section scroll-spy ------------------------------------
   const links = document.querySelectorAll(".sections a");
   const targets = [...links].map((a) =>

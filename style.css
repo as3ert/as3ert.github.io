@@ -177,7 +177,16 @@ main {
   z-index: 5;
 }
 @media (min-width: 920px) { .linenos { display: flex; } }
-.linenos span { line-height: 1.85; opacity: 0.55; }
+.linenos span {
+  line-height: 1.85;
+  opacity: 0.4;
+  transition: color 0.18s, opacity 0.18s, text-shadow 0.18s;
+}
+.linenos span.is-active {
+  color: var(--amber);
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
 
 /* fixed right rail — section index */
 .sections {
