@@ -176,7 +176,7 @@ main {
   letter-spacing: 0.1em;
   z-index: 5;
 }
-@media (min-width: 920px) { .linenos { display: flex; } }
+@media (min-width: 760px) { .linenos { display: flex; } }
 .linenos span {
   line-height: 1.85;
   opacity: 0.4;

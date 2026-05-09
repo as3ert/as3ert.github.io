@@ -14,10 +14,40 @@
   <meta property="og:url" content="https://guangxinzhao.com" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- critical CSS: paint dark background + base type before any external CSS,
+       so refresh doesn't flash light → dark and the h1 doesn't pop in -->
+  <style>
+    html, body {
+      background: #0d0b08;
+      color: #d4cabb;
+      margin: 0;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    body { visibility: hidden; }
+    body.is-ready { visibility: visible; }
+  </style>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
+  <script>
+    // reveal once styles + first font face are ready, so no flash-of-fallback
+    (function () {
+      var reveal = function () { document.body && document.body.classList.add('is-ready'); };
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(reveal);
+        // safety net: never hide longer than 600ms
+        setTimeout(reveal, 600);
+      } else {
+        window.addEventListener('load', reveal);
+        setTimeout(reveal, 600);
+      }
+    })();
+  </script>
 </head>
 <body>
 
