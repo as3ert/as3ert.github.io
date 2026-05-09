@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css?v=20260509l" />
+  <link rel="stylesheet" href="/style.css?v=20260509m" />
   <script>
     // reveal once styles + first font face are ready, so no flash-of-fallback
     (function () {
@@ -76,10 +76,10 @@
     <section id="whoami" class="hero" data-line>
       <pre class="boot" aria-hidden="true"><div><span class="dim">&gt;</span> last login: today &middot; <span class="warn">stuttgart, de</span></div><div><span class="dim">&gt;</span> mounting <span class="warn">/home/guangxin</span> ............ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> spawning shell ..................... <span class="ok">ok</span></div><div>&nbsp;</div></pre>
 
-      <h1 class="hero__name">
+      <h1 class="hero__name" data-line>
         Guangxin&nbsp;Zhao
       </h1>
-      <p class="hero__role">
+      <p class="hero__role" data-line>
         <span class="acc">@as3ert</span>
         <span class="sep">·</span>
         M.Sc. Visual Computing
@@ -87,7 +87,7 @@
         Universität Stuttgart
       </p>
 
-      <form class="prompt" id="prompt-form" autocomplete="off" spellcheck="false">
+      <form class="prompt" id="prompt-form" data-line autocomplete="off" spellcheck="false">
         <span class="prompt__sym">$</span>
         <span class="cursor" aria-hidden="true"></span>
         <input id="prompt-input" type="text" aria-label="terminal input"
@@ -105,12 +105,12 @@
 
       <div class="about">
         <div class="about__prose">
-          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. M.Sc. Computer Science (Visual Computing track) at the <a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">University of Stuttgart</a>; B.Eng. from <a href="https://www.cuhk.edu.cn" target="_blank" rel="noopener">CUHK-Shenzhen</a>.</p>
-          <p>I work on real-time graphics: rendering pipelines, non-photorealistic shading, neural scene representations. Currently a HiWi at <span class="acc">VISUS</span>, hacking on MPEG video streaming for the Amulet project (NVIDIA Falcor + NVENC + Vulkan Video), alongside a research project on 2D Gaussian Splatting for narrow-baseline forward-facing rendering.</p>
-          <p>When I'm not at a screen, I'm reading SIGGRAPH papers or arguing with CMake. <a href="#projects">A few projects</a> are below.</p>
+          <p data-line>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> online. M.Sc. Computer Science (Visual Computing track) at the <a href="https://www.uni-stuttgart.de" target="_blank" rel="noopener">University of Stuttgart</a>; B.Eng. from <a href="https://www.cuhk.edu.cn" target="_blank" rel="noopener">CUHK-Shenzhen</a>.</p>
+          <p data-line>I work on real-time graphics: rendering pipelines, non-photorealistic shading, neural scene representations. Currently a HiWi at <span class="acc">VISUS</span>, hacking on MPEG video streaming for the Amulet project (NVIDIA Falcor + NVENC + Vulkan Video), alongside a research project on 2D Gaussian Splatting for narrow-baseline forward-facing rendering.</p>
+          <p data-line>When I'm not at a screen, I'm reading SIGGRAPH papers or arguing with CMake. <a href="#projects">See projects →</a></p>
         </div>
 
-        <pre class="neofetch" aria-label="neofetch-style summary"><span class="k">os</span>............ <span class="v acc">stuttgart, de</span>
+        <pre class="neofetch" data-line aria-label="neofetch-style summary"><span class="k">os</span>............ <span class="v acc">stuttgart, de</span>
 <span class="k">role</span>.......... <span class="v">m.sc. visual computing</span>
 <span class="k">school</span>........ <span class="v">universität stuttgart</span>
 <span class="k">prev</span>.......... <span class="v">cuhk-shenzhen · b.eng cse</span>
@@ -210,23 +210,23 @@
         <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">fastest way to reach me is by email — happy to talk graphics, rendering, research, or anything in between.</p>
 
         <ul>
-          <li>
+          <li data-line>
             <span class="k">email</span>
             <span><a href="mailto:guangxin@guangxinzhao.com">guangxin@guangxinzhao.com</a></span>
           </li>
-          <li>
+          <li data-line>
             <span class="k">git</span>
             <span><a href="https://github.com/as3ert" target="_blank" rel="noopener">github.com/as3ert</a></span>
           </li>
-          <li>
+          <li data-line>
             <span class="k">cv</span>
             <span><a href="https://resume.guangxinzhao.com" target="_blank" rel="noopener">resume.guangxinzhao.com</a></span>
           </li>
-          <li>
+          <li data-line>
             <span class="k">geo</span>
             <span style="color:var(--fg)">Stuttgart, Germany</span>
           </li>
-          <li>
+          <li data-line>
             <span class="k">lang</span>
             <span style="color:var(--fg-mute)">中文 · english · deutsch (a2)</span>
           </li>
@@ -247,6 +247,6 @@
     </span>
   </footer>
 
-  <script src="/script.js?v=20260509j" defer></script>
+  <script src="/script.js?v=20260509m" defer></script>
 </body>
 </html>

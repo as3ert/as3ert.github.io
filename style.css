@@ -213,7 +213,14 @@ main {
 section {
   padding: 5rem 0;
   max-width: var(--col);
-  /* left-aligned within main; per-block widths below keep prose readable */
+  display: none; /* tab mode — JS toggles .is-active to show one at a time */
+  animation: tabin 0.22s ease-out;
+}
+section.is-active { display: block; }
+section.hero.is-active { display: flex; flex-direction: column; justify-content: center; }
+@keyframes tabin {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .cmd {

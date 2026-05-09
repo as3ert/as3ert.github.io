@@ -10,25 +10,45 @@
     history.replaceState(null, '', location.pathname + location.search);
   }
 
-  // ---- nav links: scroll without polluting the URL ------------
-  document.querySelectorAll('.sections a').forEach((a) => {
-    a.addEventListener('click', (e) => {
+  // ---- tab mode: only one section visible at a time ----------
+  const TAB_IDS = ["whoami", "about", "projects", "log", "contact"];
+  const $sections = TAB_IDS.map((id) => document.getElementById(id));
+  const $navLinks = document.querySelectorAll(".sections a");
+
+  const activate = (id) => {
+    if (!TAB_IDS.includes(id)) id = "whoami";
+    $sections.forEach((s) => s && s.classList.toggle("is-active", s.id === id));
+    $navLinks.forEach((a) => a.classList.toggle("is-active", a.dataset.target === id));
+    if (history.replaceState) {
+      history.replaceState(null, "", id === "whoami" ? location.pathname : "#" + id);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+    // line numbers depend on section layout being computed — defer one frame
+    requestAnimationFrame(() => rebuildLineNumbers && rebuildLineNumbers());
+  };
+
+  $navLinks.forEach((a) => {
+    a.addEventListener("click", (e) => {
       e.preventDefault();
-      const el = document.getElementById(a.dataset.target);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      activate(a.dataset.target);
     });
   });
-  // also for in-page anchors inside content (e.g. about → projects)
+
+  // any in-page anchor (e.g. about → "see projects") swaps tab too
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
-    if (a.closest('.sections')) return;
-    a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href').slice(1);
-      const el = id && document.getElementById(id);
-      if (!el) return;
-      e.preventDefault();
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (a.closest(".sections")) return;
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href").slice(1);
+      if (TAB_IDS.includes(id)) {
+        e.preventDefault();
+        activate(id);
+      }
     });
   });
+
+  // initial state — read hash, default to whoami
+  const initialTab = (location.hash || "#whoami").slice(1);
+  activate(initialTab);
 
   // ---- Stuttgart clock (HH:MM:SS) -----------------------------
   const $clock = document.getElementById("clock");
@@ -59,55 +79,58 @@
     $date.textContent = d.toISOString().slice(0, 10);
   }
 
-  // ---- gutter line numbers: one per [data-line] element ------
-  // Each numbered element gets a span in .linenos, positioned at the
-  // element's vertical y-coord within main. As you scroll, the element
-  // closest to the viewport top is the "active" line.
+  // ---- gutter line numbers: rebuilt per active tab -----------
+  // In tab mode, only one section is visible at a time, so we count
+  // the [data-line] items inside the currently-active section and
+  // generate a number for each, positioned at its y-coord.
   const $linenos = document.querySelector(".linenos");
-  const $main = document.querySelector("main");
-  const dataLineEls = document.querySelectorAll("[data-line]");
   let lineSpans = [];
 
-  if ($linenos && $main && dataLineEls.length) {
+  const rebuildLineNumbers = () => {
+    if (!$linenos) return;
+    const active = document.querySelector("section.is-active");
     $linenos.innerHTML = "";
-    dataLineEls.forEach((el, i) => {
+    lineSpans = [];
+    if (!active) return;
+    const items = active.querySelectorAll("[data-line]");
+    items.forEach((el, i) => {
       const span = document.createElement("span");
       span.textContent = String(i + 1).padStart(2, "0");
       $linenos.appendChild(span);
       lineSpans.push({ el, span });
     });
+    positionLines();
+    updateActiveLine();
+  };
 
-    const positionLines = () => {
-      lineSpans.forEach(({ el, span }) => {
-        // offsetTop walks up to the nearest positioned ancestor (main, since
-        // it's position:relative). Add small offset so number sits on the
-        // top edge of the element, not above it.
-        span.style.top = (el.offsetTop + 4) + "px";
-      });
-    };
+  const positionLines = () => {
+    lineSpans.forEach(({ el, span }) => {
+      // offsetTop is relative to nearest positioned ancestor (main, since
+      // main is position:relative). Add a small offset so the number sits
+      // on the top edge of the element, not above it.
+      span.style.top = (el.offsetTop + 4) + "px";
+    });
+  };
 
-    const updateActiveLine = () => {
-      const probe = window.scrollY + window.innerHeight * 0.25;
-      let activeIdx = 0;
-      lineSpans.forEach(({ el }, i) => {
-        if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
-      });
-      lineSpans.forEach(({ span }, i) =>
-        span.classList.toggle("is-active", i === activeIdx)
-      );
-    };
+  const updateActiveLine = () => {
+    if (!lineSpans.length) return;
+    const probe = window.scrollY + window.innerHeight * 0.25;
+    let activeIdx = 0;
+    lineSpans.forEach(({ el }, i) => {
+      if (el.getBoundingClientRect().top + window.scrollY <= probe) activeIdx = i;
+    });
+    lineSpans.forEach(({ span }, i) =>
+      span.classList.toggle("is-active", i === activeIdx)
+    );
+  };
 
-    let raf = 0;
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
+  let raf = 0;
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; updateActiveLine(); }); };
 
-    // initial — wait for fonts so layout is final
-    const init = () => { positionLines(); updateActiveLine(); };
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init);
-    window.addEventListener("load", init);
-    window.addEventListener("resize", () => { positionLines(); updateActiveLine(); });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    init();
-  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuildLineNumbers);
+  window.addEventListener("load", rebuildLineNumbers);
+  window.addEventListener("resize", () => { positionLines(); updateActiveLine(); });
+  window.addEventListener("scroll", onScroll, { passive: true });
 
   // ---- section scroll-spy ------------------------------------
   const links = document.querySelectorAll(".sections a");
