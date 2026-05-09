@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0d0b08" />
+
+  <title>guangxin zhao · ~/</title>
+  <meta name="description" content="Guangxin Zhao (as3ert) — Visual Computing student in Stuttgart. Hardware, graphics, self-hosted things." />
+  <meta property="og:title" content="guangxin zhao · ~/" />
+  <meta property="og:description" content="Visual Computing student. Keyboards, renderers, raspberry-pi rabbit holes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://guangxinzhao.com" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <header class="titlebar" role="banner">
+    <span class="titlebar__lights" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span class="titlebar__path">
+      <span class="user">guangxin</span><span class="at">@</span><span class="host">guangxinzhao.com</span>:~
+    </span>
+    <span class="titlebar__clock" id="clock" aria-label="Stuttgart local time">--:--:--</span>
+  </header>
+
+  <aside class="linenos" aria-hidden="true">
+    <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span>
+    <span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span>
+    <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span>
+    <span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+  </aside>
+
+  <nav class="sections" aria-label="Section index">
+    <a href="#whoami" data-target="whoami">[01] whoami</a>
+    <a href="#about" data-target="about">[02] about</a>
+    <a href="#projects" data-target="projects">[03] projects</a>
+    <a href="#log" data-target="log">[04] log</a>
+    <a href="#contact" data-target="contact">[05] contact</a>
+  </nav>
+
+  <main>
+
+    <!-- ====================================================== -->
+    <section id="whoami" class="hero">
+      <pre class="boot" aria-hidden="true"><div><span class="dim">&gt;</span> booting <span class="warn">guangxinzhao.com</span> [v.4]</div><div><span class="dim">&gt;</span> mounting <span class="warn">/home/guangxin</span> ............ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> resolving identity ........................ <span class="ok">ok</span></div><div><span class="dim">&gt;</span> last login: from <span class="warn">stuttgart, de</span></div><div>&nbsp;</div></pre>
+
+      <h1 class="hero__name">
+        <span class="lo">$</span> guangxin&nbsp;zhao<span class="lo">.tar.gz</span>
+      </h1>
+      <p class="hero__role">
+        msc visual computing
+        <span class="sep">/</span>
+        university of stuttgart
+        <span class="sep">/</span>
+        @as3ert
+      </p>
+
+      <form class="prompt" id="prompt-form" autocomplete="off" spellcheck="false">
+        <span class="prompt__sym">$</span>
+        <input id="prompt-input" type="text" aria-label="terminal input" placeholder="type 'help' and hit ↵" />
+        <span class="cursor" aria-hidden="true"></span>
+      </form>
+      <div class="term-output" id="term-output" aria-live="polite"></div>
+    </section>
+
+    <!-- ====================================================== -->
+    <section id="about">
+      <div class="cmd">cat <span style="color:var(--fg)">~/.about</span><span class="num">[02]</span></div>
+      <div class="rule">─────────────────────────────────────────────────────────────────────</div>
+
+      <div class="about">
+        <div class="about__prose">
+          <p>Hi, I'm <span class="acc">Guangxin</span> — <code>as3ert</code> in most of the places that ask for a username. Master's student in Visual Computing at the University of Stuttgart.</p>
+          <p>I like the seam between bits and matter: hand-routed keyboard PCBs, 3D-printed mistakes, real-time renderers, and a Raspberry Pi running more services than it has any business running. If you want a tour, point yourself at the <a href="#projects">projects</a> below.</p>
+          <p>Off the clock, I'm probably re-installing Arch, reading a SIGGRAPH paper I don't fully understand yet, or fighting CMake.</p>
+        </div>
+
+        <pre class="neofetch" aria-label="neofetch-style summary"><span class="k">os</span>........... <span class="v acc">stuttgart, de</span>
+<span class="k">role</span>......... <span class="v">visual computing · m.sc</span>
+<span class="k">shell</span>........ <span class="v">zsh + tmux</span>
+<span class="k">editor</span>....... <span class="v">nvim</span>
+<span class="k">distro</span>....... <span class="v">arch</span> <span class="k">(btw)</span>
+<span class="k">wm</span>........... <span class="v">hyprland</span>
+<span class="k">keyboard</span>..... <span class="v">hand-rolled · 60%</span>
+<span class="k">cwd</span>.......... <span class="v">~/projects</span>
+<span class="k">uptime</span>....... <span class="v">∞ (still counting)</span></pre>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <section id="projects">
+      <div class="cmd">ls -la <span style="color:var(--fg)">~/projects/</span><span class="num">[03]</span></div>
+      <div class="rule">─────────────────────────────────────────────────────────────────────</div>
+
+      <div class="projects">
+
+        <article class="proj">
+          <div class="proj__perms">drwxr-xr-x</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">as3ert-pcb<span class="ext">/</span></a></div>
+            <div class="proj__desc">Custom 60% mechanical keyboard. KiCad layout, RTIC firmware in Rust, designed late at night with too much coffee.</div>
+            <div class="proj__tags"><span>kicad</span><span>embedded-rust</span><span>hardware</span></div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+
+        <article class="proj">
+          <div class="proj__perms">drwxr-xr-x</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">homelab.pi<span class="ext">/</span></a></div>
+            <div class="proj__desc">Raspberry Pi self-hosted stack: Home Assistant, NAS, web terminal, monitoring. Reverse proxied through nginx, served only over a private ZeroTier network.</div>
+            <div class="proj__tags"><span>linux</span><span>docker</span><span>nginx</span><span>networking</span></div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+
+        <article class="proj">
+          <div class="proj__perms">drwxr-xr-x</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">visual-computing<span class="ext">/</span></a></div>
+            <div class="proj__desc">Coursework, scratch renderers, GLSL shaders, real-time experiments. Some of it shipped, some of it crashed in a way that was actually instructive.</div>
+            <div class="proj__tags"><span>opengl</span><span>c++</span><span>glsl</span><span>graphics</span></div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+
+        <article class="proj">
+          <div class="proj__perms">drwxr-xr-x</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">3d-prints<span class="ext">/</span></a></div>
+            <div class="proj__desc">Assorted 3D-printed parts — keyboard cases, monitor brackets, a Pi enclosure with passive airflow that mostly works.</div>
+            <div class="proj__tags"><span>fusion-360</span><span>prusa</span><span>cad</span></div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+
+        <article class="proj">
+          <div class="proj__perms">-rw-r--r--</div>
+          <div class="proj__main">
+            <div class="proj__name"><a href="https://github.com/as3ert" target="_blank" rel="noopener">dotfiles<span class="ext">.git</span></a></div>
+            <div class="proj__desc">Arch · Hyprland · Neovim · Zsh. The usual setup-shaped problem, in public.</div>
+            <div class="proj__tags"><span>config</span><span>hyprland</span><span>neovim</span></div>
+          </div>
+          <div class="proj__arrow">→</div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <section id="log">
+      <div class="cmd">git log <span style="color:var(--fg)">--my-life --oneline</span><span class="num">[04]</span></div>
+      <div class="rule">─────────────────────────────────────────────────────────────────────</div>
+
+      <div class="log">
+
+        <div class="log__entry">
+          <div class="log__hash">aa3eb1c · HEAD → main</div>
+          <div class="log__meta">Stuttgart, DE · ongoing</div>
+          <div class="log__msg">M.Sc. Visual Computing — University of Stuttgart</div>
+          <div class="log__sub">graphics, vision, simulation, the occasional all-nighter</div>
+        </div>
+
+        <div class="log__entry">
+          <div class="log__hash">fed90a4</div>
+          <div class="log__meta">2024 · transition</div>
+          <div class="log__msg">moved to Stuttgart for grad school</div>
+          <div class="log__sub">discovered the Maultaschen, never went back</div>
+        </div>
+
+        <div class="log__entry">
+          <div class="log__hash">b00c123</div>
+          <div class="log__meta">undergrad · Computer Science</div>
+          <div class="log__msg">B.Sc. — built first keyboard, broke first oscilloscope</div>
+          <div class="log__sub">started signing emails as `as3ert`, never explained why</div>
+        </div>
+
+        <div class="log__entry">
+          <div class="log__hash">1b13a90 · init</div>
+          <div class="log__meta">earlier · root commit</div>
+          <div class="log__msg">born; immediately started taking things apart</div>
+          <div class="log__sub">no documentation. shipped anyway.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <section id="contact">
+      <div class="cmd">cat <span style="color:var(--fg)">~/.contact</span><span class="num">[05]</span></div>
+      <div class="rule">─────────────────────────────────────────────────────────────────────</div>
+
+      <div class="contact">
+        <p style="color:var(--fg-mute); margin-bottom:1.25rem; font-size:13px;">if you want to talk shop, ship a postcard, or send a paper that changed how you think — fastest path is email.</p>
+
+        <ul>
+          <li>
+            <span class="k">email</span>
+            <span><a href="mailto:as3ertpro@gmail.com">as3ertpro@gmail.com</a></span>
+          </li>
+          <li>
+            <span class="k">git</span>
+            <span><a href="https://github.com/as3ert" target="_blank" rel="noopener">github.com/as3ert</a></span>
+          </li>
+          <li>
+            <span class="k">geo</span>
+            <span style="color:var(--fg)">stuttgart, de · 48.7758° N, 9.1829° E</span>
+          </li>
+          <li>
+            <span class="k">pgp</span>
+            <span style="color:var(--fg-mute)">on request</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>built by hand · zero frameworks</span>
+    <span class="sep">·</span>
+    <span>commit <code id="build-hash">0xdeadbeef</code></span>
+    <span class="sep">·</span>
+    <span>last touched <code id="build-date">--</code></span>
+    <span class="right">
+      try <kbd>j</kbd> <kbd>k</kbd> · <kbd>?</kbd> for help
+    </span>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>404 · guangxinzhao.com</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .nf-wrap {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+      padding: 0 var(--gutter);
+      max-width: 720px; margin: 0 auto;
+    }
+    .nf-code {
+      font-size: clamp(4rem, 18vw, 9rem);
+      font-weight: 800;
+      color: var(--bone);
+      letter-spacing: -0.05em;
+      line-height: 0.9;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(255,170,0,0.08);
+    }
+    .nf-code .lo { color: var(--amber); }
+    .nf-msg { color: var(--fg-mute); margin-bottom: 2rem; max-width: 50ch; }
+    .nf-msg b { color: var(--fg); }
+    .nf-back {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--fg-dim);
+      padding-bottom: 1px;
+    }
+    .nf-back:hover { color: var(--amber); border-color: var(--amber); }
+    .nf-back::before { content: '$ cd ~ '; color: var(--amber); }
+  </style>
+</head>
+<body>
+  <header class="titlebar" role="banner">
+    <span class="titlebar__lights" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span class="titlebar__path">guangxin<span class="at" style="color:var(--amber)">@</span>guangxinzhao.com:~/<span style="color:var(--fg-dim)">404</span></span>
+  </header>
+
+  <div class="nf-wrap">
+    <div class="nf-code">4<span class="lo">0</span>4</div>
+    <p class="nf-msg">
+      <b>cat: ./that-page: No such file or directory</b><br/>
+      either it never existed, or someone <code style="color:var(--amber)">rm -rf</code>'d it.
+      try the front door.
+    </p>
+    <a class="nf-back" href="/">go home</a>
+  </div>
+</body>
+</html>
