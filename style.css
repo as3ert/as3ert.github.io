@@ -246,10 +246,10 @@ section.hero.is-active { display: flex; flex-direction: column; justify-content:
    ============================================================ */
 .hero {
   min-height: calc(100vh - 88px);
-  display: flex;
   flex-direction: column;
   justify-content: center;
   padding-top: 0;
+  /* display value comes from section / section.is-active rules above */
 }
 
 .boot {
