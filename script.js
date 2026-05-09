@@ -24,12 +24,14 @@
     return best;
   };
 
-  const animateScrollTo = (targetY, duration = 220) => {
+  const animateScrollTo = (targetY, duration = 380) => {
     const startY = window.scrollY;
     const distance = targetY - startY;
     if (Math.abs(distance) < 1) return;
     const startTime = performance.now();
-    const ease = (t) => 1 - Math.pow(1 - t, 3); // cubic ease-out
+    // cubic ease-in-out — gentle start, fast middle, gentle stop
+    const ease = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     const tick = (now) => {
       const t = Math.min(1, (now - startTime) / duration);
       window.scrollTo(0, startY + distance * ease(t));
@@ -43,8 +45,8 @@
     const el = snapSections[i];
     if (!el) return;
     snapBusy = true;
-    animateScrollTo(el.offsetTop, 220);
-    setTimeout(() => { snapBusy = false; }, 260);
+    animateScrollTo(el.offsetTop, 380);
+    setTimeout(() => { snapBusy = false; }, 420);
   };
 
   window.addEventListener("wheel", (e) => {
