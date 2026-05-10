@@ -322,7 +322,13 @@ section {
   margin-top: 1.5rem;
 }
 .prompt__sym { color: var(--amber); margin-right: 0.55rem; }
-.prompt .cursor { margin-right: 0.4em; }
+.prompt .cursor {
+  align-self: center;        /* center on the prompt row, not on baseline */
+  height: 0.95em;
+  width: 0.55em;
+  margin-right: 0.4em;
+  transform: translateY(0.05em);  /* tiny optical balance against the $ */
+}
 .prompt input {
   background: transparent;
   border: 0;
