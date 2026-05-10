@@ -5,14 +5,12 @@
   ],
   "neofetch": [
     ["os",       "stuttgart, de",            true],
-    ["role",     "m.sc. visual computing"],
-    ["school",   "universität stuttgart"],
-    ["prev",     "cuhk-shenzhen · b.eng cse"],
+    ["edu",      "m.sc. visual computing · uni stuttgart"],
+    ["prev",     "b.eng cse · cuhk-shenzhen"],
     ["work",     "hiwi @ visus · amulet"],
     ["research", "2d gaussian splatting"],
     ["langs",    "c++ · python · cuda · glsl"],
     ["stack",    "vulkan · opengl · falcor · pytorch"],
-    ["spoken",   "中文 · english · deutsch (a2)"],
-    ["uptime",   "∞ (still counting)"]
+    ["spoken",   "中文 · english · deutsch (a2)"]
   ]
 }
