@@ -242,9 +242,11 @@
   let lineSpans = [];
 
   const positionLines = () => {
+    // place each section's line number near the vertical middle of the
+    // viewport when that section is snapped to the top of the screen.
+    const halfVh = window.innerHeight * 0.5;
     lineSpans.forEach(({ el, span }) => {
-      // offsetTop is relative to main (position:relative)
-      span.style.top = (el.offsetTop + 4) + "px";
+      span.style.top = (el.offsetTop + halfVh - 8) + "px";
     });
   };
 
@@ -264,8 +266,9 @@
     if (!$linenos) return;
     $linenos.innerHTML = "";
     lineSpans = [];
-    const els = document.querySelectorAll("[data-line]");
-    els.forEach((el, i) => {
+    // one number per section — highlight follows snap-jump position
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach((el, i) => {
       const span = document.createElement("span");
       span.textContent = String(i + 1).padStart(2, "0");
       $linenos.appendChild(span);
