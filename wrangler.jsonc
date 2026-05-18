@@ -5,5 +5,11 @@
   "assets": {
     "directory": "./",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    { "pattern": "gunxhin.com", "custom_domain": true },
+    { "pattern": "www.gunxhin.com", "custom_domain": true },
+    { "pattern": "guangxinzhao.com", "custom_domain": true },
+    { "pattern": "www.guangxinzhao.com", "custom_domain": true }
+  ]
 }
